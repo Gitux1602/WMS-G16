@@ -1,0 +1,199 @@
+.estado {
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.4s ease-in-out; /* Suavecito */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.estado.bg-success {
+    background: #28a745; /* Verde */
+    color: #fff;
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.8);
+}
+
+.estado.bg-danger {
+    background: #dc3545; /* Rojo */
+    color: #fff;
+    text-shadow: 0 0 10px rgba(220, 53, 69, 0.8);
+}
+
+.custom-header {
+    background-color: #013A63; /* Azul Marino */
+    color: white;
+}
+
+/* Ajuste del logo */
+.logo img {
+    height: 50px;
+}
+.hover-effect:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Fondo gris muy suave al hacer hover */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+/* Botones grandes en turquesa */
+.custom-btn {
+    background-color: #028090; /* Verde Turquesa */
+    color: white;
+    border: none;
+    padding: 20px;
+    font-size: 1.5rem;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #025E73; /* Azul más oscuro en hover */
+}
+
+/* Botones que ocupan el 100% de su columna */
+.w-100 {
+    width: 100%;
+}
+
+/* Fondo general */
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor del login */
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de inicio de sesión */
+.login-container h2 {
+    color: #013A63; /* Azul marino */
+    font-weight: bold;
+}
+
+/* Formulario y campos */
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Espaciado entre campos */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Enlaces */
+a {
+    color: #028090; /* Verde Turquesa */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Mensajes de error */
+.text-danger small {
+    font-size: 0.875rem;
+}
+
+/* Botón de envío */
+.btn {
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #028090;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #025e73;
+}
+
+/* Fondo general */
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor del registro */
+.register-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de registro */
+.register-container h2 {
+    color: #013A63; /* Azul marino */
+    font-weight: bold;
+}
+
+/* Formulario y campos */
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Espaciado entre campos */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Enlaces */
+a {
+    color: #028090; /* Verde Turquesa */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Mensajes de error */
+.text-danger small {
+    font-size: 0.875rem;
+}
+
+/* Botón de envío */
+.btn {
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #028090;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #025e73;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+

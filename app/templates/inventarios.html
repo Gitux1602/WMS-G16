@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bg-light">
+    <!-- Cabecera -->
+    <header class="d-flex align-items-center justify-content-between px-4 py-3 custom-header">
+        <h1 class="text-white text-center flex-grow-1 m-0">{{ titulo }}</h1>
+        <a href="{{ url_for('main.home') }}" class="btn btn-secondary btn-lg">Volver</a>
+    </header>
+
+    <!-- Cuerpo principal -->
+    <main class="container mt-5">
+        <!-- Tabla de inventarios -->
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th id="th-docnum">Número de Documento</th>
+                            <th id="th-almacen">Almacén</th>
+                            <th id="th-estado">Estado</th>
+                            <th id="th-fechaInicio">Fecha de Inicio</th>
+                            {% if titulo != "Inventarios Abiertos" %}
+                                <th id="th-fechaFin">Fecha de Fin</th>
+                            {% endif %}
+                            <th id="th-basedatos">Base de Datos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if inventarios %}
+                            {% for inventario in inventarios %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('inventario.mostrar_conteo_sap', docnum=inventario.docnum) }}" 
+                                       class="btn btn-link text-decoration-none text-dark hover-effect">
+                                        {{ inventario.docnum }}
+                                    </a>
+                                </td>
+                                <td>{{ inventario.almacen }}</td>
+                                <td>{{ inventario.estado }}</td>
+                                <td>{{ inventario.fechaInicio if inventario.fechaInicio else 'N/A' }}</td>
+                                {% if titulo != "Inventarios Abiertos" %}
+                                    <td>{{ inventario.fechaFin if inventario.fechaFin else 'N/A' }}</td>
+                                {% endif %}
+                                <td>{{ inventario.basedatos }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="{% if titulo == 'Inventarios Abiertos' %}5{% else %}6{% endif %}" class="text-center">
+                                    No hay {{ titulo.lower() }}.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
