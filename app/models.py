@@ -75,26 +75,13 @@ class Inventario(db.Model):
         if self.estado == 'Cerrado':
             raise ValueError("El documento ya está cerrado.")
     
-        print(f"Cerrando documento {self.docnum}. FechaFin: {date.today()}")  # Depuración
-        self.fechaFin = date.today()  # Usa date.today() en lugar de datetime.utcnow()
+        print(f"Cerrando documento {self.docnum}. FechaFin: {date.today()}") 
+        self.fechaFin = date.today()  
         self.estado = 'Cerrado'  # Actualiza el estado
-        print(f"Estado actualizado a 'Cerrado'. FechaFin: {self.fechaFin}")  # Depuración
+        print(f"Estado actualizado a 'Cerrado'. FechaFin: {self.fechaFin}")  
         db.session.commit()  # Guarda los cambios en la base de datos
-        print("Cambios guardados en la base de datos.")  # Depuración
+        print("Cambios guardados en la base de datos.")  
 
-    def inicializar_ubicaciones(self):
-        """
-        Inicializa las 20 ubicaciones para este conteo.
-        """
-        for ubicacion in UBICACIONES_PREDEFINIDAS:
-            nueva_ubicacion = Ubicaciones(
-                docnum=self.docnum,
-                itemcode='',  # Inicialmente vacío
-                ubicacion=ubicacion,
-                cantidad_contada=0  # Inicialmente 0
-            )
-            db.session.add(nueva_ubicacion)
-        db.session.commit()
 
 
 class InventarioDetalle(db.Model):

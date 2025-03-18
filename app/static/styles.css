@@ -1,27 +1,55 @@
+
+@media (max-width: 480px) {
+    .custom-header h1 {
+        font-size: 1.2rem; /* Reducir el tamaño del título en pantallas pequeñas */
+    }
+
+    .form-control, .form-select, .btn {
+        font-size: 0.9rem; /* Reducir el tamaño de la fuente en inputs y botones */
+    }
+
+    .table-responsive {
+        overflow-x: auto; /* Hacer la tabla desplazable horizontalmente */
+    }
+
+    .table th, .table td {
+        padding: 0.5rem; /* Reducir el padding de las celdas de la tabla */
+        font-size: 0.85rem; /* Reducir el tamaño de la fuente en las celdas de la tabla */
+    }
+
+    .card-body {
+        padding: 1rem; /* Reducir el padding del cuerpo de la tarjeta */
+    }
+
+    .card-header h5 {
+        font-size: 1rem; /* Reducir el tamaño del título de la tarjeta */
+    }
+}
+
 .estado {
     padding: 10px 15px;
     font-size: 14px;
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    transition: all 0.4s ease-in-out; /* Suavecito */
+    transition: all 0.4s ease-in-out; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .estado.bg-success {
-    background: #28a745; /* Verde */
+    background: #28a745; 
     color: #fff;
     text-shadow: 0 0 10px rgba(40, 167, 69, 0.8);
 }
 
 .estado.bg-danger {
-    background: #dc3545; /* Rojo */
+    background: #dc3545; 
     color: #fff;
     text-shadow: 0 0 10px rgba(220, 53, 69, 0.8);
 }
 
 .custom-header {
-    background-color: #013A63; /* Azul Marino */
+    background-color: #013A63; 
     color: white;
 }
 
@@ -31,8 +59,8 @@
 }
 .hover-effect:hover {
     background-color: rgba(0, 0, 0, 0.05); /* Fondo gris muy suave al hacer hover */
-    border-radius: 4px; /* Bordes redondeados */
-    transition: background-color 0.3s ease; /* Transición suave */
+    border-radius: 4px;
+    transition: background-color 0.3s ease; 
 }
 
 /* Botones grandes en turquesa */
@@ -47,7 +75,7 @@
 }
 
 .custom-btn:hover {
-    background-color: #025E73; /* Azul más oscuro en hover */
+    background-color: #025E73; 
 }
 
 /* Botones que ocupan el 100% de su columna */

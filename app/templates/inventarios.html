@@ -31,6 +31,7 @@
                                 <th id="th-fechaFin">Fecha de Fin</th>
                             {% endif %}
                             <th id="th-basedatos">Base de Datos</th>
+                            <th id="th-acciones">Acciones</th> <!-- Nueva columna para el botón -->
                         </tr>
                     </thead>
                     <tbody>
@@ -50,13 +51,20 @@
                                     <td>{{ inventario.fechaFin if inventario.fechaFin else 'N/A' }}</td>
                                 {% endif %}
                                 <td>{{ inventario.basedatos }}</td>
+                                <td>
+                                    {% if inventario.estado == 'Cerrado' %}
+                                        <button class="btn btn-success btn-sm exportar-excel" 
+                                                data-docnum="{{ inventario.docnum }}" 
+                                                data-estado="{{ inventario.estado }}">
+                                            Exportar Excel
+                                        </button>
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="{% if titulo == 'Inventarios Abiertos' %}5{% else %}6{% endif %}" class="text-center">
-                                    No hay {{ titulo.lower() }}.
-                                </td>
+                                <td colspan="7">No hay inventarios disponibles.</td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -67,5 +75,45 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript personalizado -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Seleccionar todos los botones de "Exportar Excel"
+            const botonesExportar = document.querySelectorAll('.exportar-excel');
+
+            botonesExportar.forEach(boton => {
+                boton.addEventListener('click', function () {
+                    const docnum = this.getAttribute('data-docnum');
+                    const estado = this.getAttribute('data-estado');
+
+                    // Hacer una solicitud fetch a la ruta de Flask
+                    fetch(`/exportar_excel/${docnum}/${estado}`)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.blob(); // Convertir la respuesta a un Blob
+                            } else {
+                                throw new Error('Error al exportar el archivo');
+                            }
+                        })
+                        .then(blob => {
+                            // Crear un enlace temporal para descargar el archivo
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `inventario_${docnum}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Hubo un error al exportar el archivo.');
+                        });
+                });
+            });
+        });
+    </script>
 </body>
 </html>

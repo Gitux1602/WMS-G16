@@ -54,7 +54,7 @@ def bajar_inventario_desde_sap(basedatos):
         cursor.execute(query)
         resultados = cursor.fetchall()
         cursor.close()
-        conn.close()
+        conn.close() 
 
         return resultados
     except Exception as e:

@@ -1,7 +1,11 @@
-from flask import Blueprint, render_template
+from io import BytesIO
+from flask import Blueprint, flash, redirect, render_template, send_file, url_for
 from flask_login import login_required
-from app.models import Inventario
+import pandas as pd
+from sqlalchemy import func
+from app.models import Inventario, InventarioDetalle
 from app import db
+
 inv_estado = Blueprint('inventarios_estado', __name__)
 
 def obtener_inventarios_por_estado(estado):
@@ -49,3 +53,63 @@ def inventarios_cerrados():
     print(inventario.estado)  # Debería imprimir 'Cerrado'
     lista_inventarios = obtener_inventarios_por_estado('Cerrado')
     return render_template('inventarios.html', inventarios=lista_inventarios, titulo="Inventarios Cerrados")
+
+@inv_estado.route('/exportar_excel/<int:docnum>/<string:estado>')
+@login_required
+def exportar_excel(docnum, estado):
+    try:
+        # Depuración: Imprimir el docnum y el estado recibidos
+        print(f"Exportando Excel para el inventario con docnum: {docnum}, estado: {estado}")
+
+        # Obtener los detalles del inventario
+        detalles = db.session.query(
+            InventarioDetalle.itemcode,
+            func.sum(InventarioDetalle.cantidad_contada).label('suma_cantidad'),
+            func.sum(InventarioDetalle.diferencias).label('suma_diferencias')
+        ).filter(InventarioDetalle.docnum == docnum) \
+         .group_by(InventarioDetalle.itemcode) \
+         .all()
+
+        # Depuración: Imprimir los detalles obtenidos
+        print(f"Detalles obtenidos para el inventario {docnum}: {detalles}")
+
+        # Crear un DataFrame con los detalles
+        data = {
+            'Artículo': [detalle.itemcode for detalle in detalles],
+            'Suma Cantidad': [detalle.suma_cantidad for detalle in detalles],
+            'Diferencias': [detalle.suma_diferencias for detalle in detalles]
+        }
+        df = pd.DataFrame(data)
+
+        # Depuración: Imprimir el DataFrame generado
+        print(f"DataFrame generado:\n{df}")
+
+        # Crear un archivo Excel en memoria
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Inventario')
+        output.seek(0)  # Mover el cursor al inicio del archivo
+
+        # Depuración: Confirmar que el archivo se generó correctamente
+        print(f"Archivo Excel generado para el inventario {docnum}")
+
+        # Enviar el archivo como respuesta
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=f'inventario_{docnum}.xlsx'
+        )
+
+    except Exception as e:
+        # Depuración: Imprimir el error en la consola
+        print(f"Error al exportar el inventario a Excel: {str(e)}")
+        
+        # Mostrar un mensaje de error al usuario
+        flash(f"Error al exportar el inventario a Excel: {str(e)}", 'danger')
+        
+        # Redirigir a la página correcta según el estado
+        if estado == 'Abierto':
+            return redirect(url_for('inventarios_estado.inventarios_abiertos'))
+        else:
+            return redirect(url_for('inventarios_estado.inventarios_cerrados'))
