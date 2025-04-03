@@ -48,9 +48,7 @@ def inventarios_cerrados():
     """
     Muestra la lista de inventarios con estado 'Cerrado'.
     """
-    db.session.expire_all()
-    inventario = Inventario.query.filter_by(docnum=16).first()
-    print(inventario.estado)  # Debería imprimir 'Cerrado'
+    #db.session.expire_all()
     lista_inventarios = obtener_inventarios_por_estado('Cerrado')
     return render_template('inventarios.html', inventarios=lista_inventarios, titulo="Inventarios Cerrados")
 

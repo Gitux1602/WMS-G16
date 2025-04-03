@@ -31,7 +31,9 @@
                                 <th id="th-fechaFin">Fecha de Fin</th>
                             {% endif %}
                             <th id="th-basedatos">Base de Datos</th>
-                            <th id="th-acciones">Acciones</th> <!-- Nueva columna para el botón -->
+                            {% if titulo != "Inventarios Abiertos" %}
+                                <th id="th-acciones">Exportar Excel</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -51,15 +53,17 @@
                                     <td>{{ inventario.fechaFin if inventario.fechaFin else 'N/A' }}</td>
                                 {% endif %}
                                 <td>{{ inventario.basedatos }}</td>
-                                <td>
-                                    {% if inventario.estado == 'Cerrado' %}
-                                        <button class="btn btn-success btn-sm exportar-excel" 
-                                                data-docnum="{{ inventario.docnum }}" 
-                                                data-estado="{{ inventario.estado }}">
-                                            Exportar Excel
-                                        </button>
-                                    {% endif %}
-                                </td>
+                                {% if titulo != "Inventarios Abiertos" %}
+                                    <td>
+                                        {% if inventario.estado == 'Cerrado' %}
+                                            <button class="btn btn-success btn-sm exportar-excel" 
+                                                    data-docnum="{{ inventario.docnum }}" 
+                                                    data-estado="{{ inventario.estado }}">
+                                                Exportar Excel
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         {% else %}
