@@ -1,6 +1,6 @@
-import pandas as pd
+#import pandas as pd
 from app import create_app, db
-from app.models import Articulo, Proveedor, CodigoBarras
+from app.models import CodigoBarras, Proveedor#, Articulo,  CodigoBarras
 
 app = create_app()
 """
@@ -25,7 +25,8 @@ with app.app_context():
     db.session.commit()
     print(f"\nSe han insertado {len(df)} artículos exitosamente.")
 """
-
+"""
+#Crea QR's nuevos desde el excel llamado qrsnuevos y sus columnas son ItemCode, Supplier, Qr, Qty
 with app.app_context():
     df = pd.read_excel('qrsnuevos.xlsx')
     
@@ -53,8 +54,9 @@ with app.app_context():
     
     db.session.commit()  
     print("Códigos de barras creados exitosamente.")
-
 """
+"""
+#Crea proveedores desde la lista proveedores
 with app.app_context():
     proveedores = [
         Proveedor(proveedor_id="P0008", nombre="Extrusiones Metalicas")
@@ -70,28 +72,39 @@ with app.app_context():
 
 """
 """
-
+#Renombra el campo nombre de la tabla proveedor
 with app.app_context():
+    proveedor = Proveedor.query.get("P0008")
     
-    articulo = Articulo.query.filter_by(itemcode="7518SA").first()
-    proveedor = Proveedor.query.filter_by(proveedor_id="P0008").first()
-
-    if articulo and proveedor:
-        codigos_barras = [
-            CodigoBarras(
-                codigo_barras="2", 
-                itemcode=articulo.itemcode,
-                proveedor_id=proveedor.proveedor_id,
-                pqt=10 
-            )
-        ]
-
+    if proveedor:
+        proveedor.nombre = "EXTRUSIONES METALICAS"
         
-        db.session.add_all(codigos_barras)
-
-        # Guardamos los cambios
+        # Guardar cambios
         db.session.commit()
-        print("Datos iniciales de códigos de barras cargados exitosamente.")
+        print("Nombre del proveedor actualizado correctamente.")
     else:
-        print("No se encontraron los datos relacionados.")
+        print("Proveedor no encontrado.")
 """
+"""
+#Elimina C.Barras
+with app.app_context():
+    codigo = CodigoBarras.query.get("7518SA")
+    if codigo:
+        db.session.delete(codigo)
+        db.session.commit()
+        print("Código de barras eliminado.")
+    else:
+        print("Código no encontrado.")
+"""
+
+#Elimina Proveedor
+with app.app_context():
+    proveedor = Proveedor.query.get("P0002")
+    
+    if proveedor:
+        db.session.delete(proveedor)
+        
+        db.session.commit()
+        print("Proveedor eliminado correctamente.")
+    else:
+        print("Proveedor no encontrado.")
