@@ -63,7 +63,6 @@
     transition: background-color 0.3s ease; 
 }
 
-/* Botones grandes en turquesa */
 .custom-btn {
     background-color: #028090; /* Verde Turquesa */
     color: white;
@@ -78,16 +77,10 @@
     background-color: #025E73; 
 }
 
-/* Botones que ocupan el 100% de su columna */
 .w-100 {
     width: 100%;
 }
 
-/* Fondo general */
-body {
-    background-color: #f4f4f4;
-    font-family: Arial, sans-serif;
-}
 
 /* Contenedor del login */
 .login-container {

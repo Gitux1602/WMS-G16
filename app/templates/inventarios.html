@@ -19,8 +19,9 @@
     <main class="container mt-5">
         <!-- Tabla de inventarios -->
         <div class="card shadow">
-            <div class="card-body">
-                <table class="table table-striped table-hover">
+            <div class="card-body p-0"> <!-- Eliminamos el padding para aprovechar todo el espacio -->
+                <div class="table-responsive"> <!-- Añadimos este contenedor -->
+                    <table class="table table-striped table-hover mb-0">
                     <thead class="table-dark">
                         <tr>
                             <th id="th-docnum">Número de Documento</th>

@@ -53,8 +53,6 @@ def crear_conteo_inventario(basedatos):
             )
             db.session.add(nuevo_detalle)
 
-        # Eliminar la inicialización automática de ubicaciones
-        # nuevo_inventario.inicializar_ubicaciones()  # ¡Elimina esta línea!
 
         db.session.commit()
         print(f"Inventario {nuevo_inventario.docnum} guardado con éxito.")
