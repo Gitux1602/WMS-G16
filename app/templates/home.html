@@ -22,7 +22,9 @@
             </div>
             
             {% if current_user.is_authenticated and current_user.rol == 1 %}
-                <a href="{{ url_for('main.register') }}">Crea un nuevo usuario</a>
+                <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-sm" title="Crear nuevo usuario">
+                    <i class="bi bi-person-plus-fill"></i>
+                </a>
             {% endif %}
     
             <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline-light" title="Cerrar sesión">
