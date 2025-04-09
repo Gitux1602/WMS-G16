@@ -58,7 +58,12 @@
             <div class="form-group">
                 {{ form.submit(class="btn btn-primary w-100") }}
             </div>
+            <div class="form-group mt-4 text-center">
+                <a href="{{ url_for('main.home') }}" class="btn btn-outline-light btn-sm rounded-pill px-4">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>                
+            </div>
+            
         </form>
-        <p class="text-center mt-3">¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}">Inicia sesión aquí</a>.</p>
     </div>
 {% endblock %}

@@ -82,7 +82,17 @@ class Inventario(db.Model):
         db.session.commit()  # Guarda los cambios en la base de datos
         print("Cambios guardados en la base de datos.")  
 
-
+#Prueba para ver como funcion event.listens_for
+@event.listens_for(Inventario, 'before_insert')
+@event.listens_for(Inventario, 'before_update')
+def validate_comentarios_before_change(mapper, connection, target):
+    if target.comentarios is not None and 'hola' in target.comentarios.lower():
+        error_msg = f"Intento de guardar comentario no permitido en documento {target.docnum}: '{target.comentarios}'"
+        print(f"ERROR VALIDACIÓN: {error_msg}")  # Esto se verá en la consola
+        raise ValueError("El campo comentarios no puede contener la palabra 'hola'")
+    
+    # Mensaje de éxito (opcional)
+    print(f"Comentarios validados correctamente para documento {target.docnum}")
 
 class InventarioDetalle(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) 

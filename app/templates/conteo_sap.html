@@ -71,38 +71,39 @@
                 <h5 class="card-title mb-0">Detalles del Inventario</h5>
             </div>
             <div class="card-body table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Artículo</th>
-                            <th>Stock</th>
-                            <th>Suma Cantidad</th>
-                            <th>Cantidad Ubicación</th>
-                            <th>Diferencias</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for detalle in detalles %}
-                        <tr data-itemcode="{{ detalle.itemcode }}">
-                            <td>{{ detalle.articulo.descripcion }} ({{ detalle.itemcode }})</td>
-                            <td>{{ detalle.cantidad_almacen }}</td>
-                            <td>{{ detalle.sumatoria_cantidad }}</td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm cantidad-ubicacion"
-                                    data-detalle-id="{{ detalle.id }}"
-                                    data-ubicacion="{{ UBICACIONES_PREDEFINIDAS[0] }}"
-                                    onchange="actualizarCantidadUbicacion(this)"
-                                    min="0"
-                                    value="{{ detalle.cantidades_por_ubicacion[UBICACIONES_PREDEFINIDAS[0]] }}"
-                                    {% if inventario.estado == 'Cerrado' %}disabled{% endif %}>
-                            </td>
-                            <td class="{{ 'text-danger' if detalle.diferencias < 0 else 'text-success' }}">
-                                {{ detalle.diferencias }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <!-- En la sección de la tabla (cambiar el thead y tbody) -->
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Artículo</th>
+            <!-- <th>Stock</th> -->  <!-- Comentado o eliminado -->
+            <th>Suma Cantidad</th>
+            <th>Cantidad Ubicación</th>
+            <th>Diferencias</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detalle in detalles %}
+        <tr data-itemcode="{{ detalle.itemcode }}">
+            <td>{{ detalle.articulo.descripcion }} ({{ detalle.itemcode }})</td>
+            <!-- <td>{{ detalle.cantidad_almacen }}</td> -->  <!-- Comentado o eliminado -->
+            <td>{{ detalle.sumatoria_cantidad }}</td>
+            <td>
+                <input type="number" class="form-control form-control-sm cantidad-ubicacion"
+                    data-detalle-id="{{ detalle.id }}"
+                    data-ubicacion="{{ UBICACIONES_PREDEFINIDAS[0] }}"
+                    onchange="actualizarCantidadUbicacion(this)"
+                    min="0"
+                    value="{{ detalle.cantidades_por_ubicacion[UBICACIONES_PREDEFINIDAS[0]] }}"
+                    {% if inventario.estado == 'Cerrado' %}disabled{% endif %}>
+            </td>
+            <td class="{{ 'text-danger' if detalle.diferencias < 0 else 'text-success' }}">
+                {{ detalle.diferencias }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
             </div>
         </div>
         <div class="mt-3">
@@ -250,8 +251,8 @@
             .then(data => {
                 if (data.success) {
                     // Actualizar la sumatoria y las diferencias en la tabla
-                    const sumatoriaCell = input.closest('tr').querySelector('td:nth-child(3)'); // Columna 3: Sumatoria
-                    const diferenciaCell = input.closest('tr').querySelector('td:nth-child(5)'); // Columna 5: Diferencias
+                    const sumatoriaCell = input.closest('tr').querySelector('td:nth-child(2)'); // Columna 3: Sumatoria
+                    const diferenciaCell = input.closest('tr').querySelector('td:nth-child(4)'); // Columna 5: Diferencias
 
                     sumatoriaCell.textContent = data.sumatoria_cantidad;
                     diferenciaCell.textContent = data.diferencias;
@@ -320,9 +321,9 @@ function actualizarGrid(itemcode, descripcion, sumatoriaCantidad, cantidadUbicac
     const fila = document.querySelector(`tr[data-itemcode="${itemcode}"]`);
     if (fila) {
         fila.querySelector('td:nth-child(1)').textContent = `${descripcion} (${itemcode})`; // Descripción y código
-        fila.querySelector('td:nth-child(3)').textContent = sumatoriaCantidad; // Sumatoria
-        fila.querySelector('td:nth-child(4) input').value = cantidadUbicacion; // Cantidad Contada Ubicación
-        fila.querySelector('td:nth-child(5)').textContent = diferencias; // Diferencias
+        fila.querySelector('td:nth-child(2)').textContent = sumatoriaCantidad; // Sumatoria
+        fila.querySelector('td:nth-child(3) input').value = cantidadUbicacion; // Cantidad Contada Ubicación
+        fila.querySelector('td:nth-child(4)').textContent = diferencias; // Diferencias
     } else {
         console.error(`No se encontró la fila para el artículo con código: ${itemcode}`);
     }

@@ -1,6 +1,6 @@
 #import pandas as pd
 from app import create_app, db
-from app.models import CodigoBarras, Proveedor#, Articulo,  CodigoBarras
+from app.models import CodigoBarras, Proveedor, Articulo,  CodigoBarras, User
 
 app = create_app()
 """
@@ -88,7 +88,7 @@ with app.app_context():
 """
 #Elimina C.Barras
 with app.app_context():
-    codigo = CodigoBarras.query.get("7518SA")
+    codigo = CodigoBarras.query.get("120500006100563M0E")
     if codigo:
         db.session.delete(codigo)
         db.session.commit()
@@ -96,7 +96,7 @@ with app.app_context():
     else:
         print("Código no encontrado.")
 """
-
+"""
 #Elimina Proveedor
 with app.app_context():
     proveedor = Proveedor.query.get("P0002")
@@ -108,3 +108,16 @@ with app.app_context():
         print("Proveedor eliminado correctamente.")
     else:
         print("Proveedor no encontrado.")
+"""
+#Asigna rol de administrador = (1) dado el User.query.get(id) de la tabla User
+with app.app_context():
+    usuarioadmin = User.query.get(2)
+
+    if usuarioadmin:
+        usuarioadmin.rol = 0
+        
+        # Guardar cambios
+        db.session.commit()
+        print("Rol de usuario actualizado correctamente a admin")
+    else:
+        print("Usuario no encontrado")
