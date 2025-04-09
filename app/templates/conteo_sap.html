@@ -127,6 +127,31 @@
     
     <script>
 
+window.onload = function () {
+    const inputEscaneo = document.getElementById('codigo-barras');
+    if (inputEscaneo && !inputEscaneo.disabled) {
+        inputEscaneo.focus();
+    }
+
+    // Restaurar ubicación seleccionada
+    const selectUbicacion = document.getElementById('ubicacion-select');
+    const savedUbicacion = localStorage.getItem('ubicacionSeleccionada');
+
+    if (savedUbicacion) {
+        selectUbicacion.value = savedUbicacion;
+        document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
+            input.setAttribute('data-ubicacion', savedUbicacion);
+            actualizarCampoUbicacion(input, savedUbicacion);
+        });
+    } else {
+        // Guardar por defecto la ubicación inicial
+        localStorage.setItem('ubicacionSeleccionada', selectUbicacion.value);
+    }
+};
+
+
+
+
         // Función para actualizar el campo de entrada con el valor de la ubicación seleccionada
         function actualizarCampoUbicacion(input, ubicacion) {
             const detalleId = input.getAttribute('data-detalle-id');
@@ -189,83 +214,98 @@
 
         // Escuchar el cambio de ubicación
         document.getElementById('ubicacion-select').addEventListener('change', function() {
-            const ubicacion = this.value;
+        const ubicacion = this.value;
+    
+    // Guardar la ubicación seleccionada en localStorage
+    localStorage.setItem('ubicacionSeleccionada', ubicacion);
+    
+    // Actualizar todos los campos de cantidad contada por ubicación
+    document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
+        input.setAttribute('data-ubicacion', ubicacion);
+        actualizarCampoUbicacion(input, ubicacion); // Actualizar el valor del campo
+    });
 
-            // Actualizar todos los campos de cantidad contada por ubicación
-            document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
-                input.setAttribute('data-ubicacion', ubicacion);
-                actualizarCampoUbicacion(input, ubicacion); // Actualizar el valor del campo
-            });
+    // Poner el foco en el campo de escaneo
+    const inputEscaneo = document.getElementById('codigo-barras');
+    if (inputEscaneo && !inputEscaneo.disabled) {
+        inputEscaneo.focus();
+    }
+});
+
+function actualizarCantidadUbicacion(input) {
+    const detalleId = input.getAttribute('data-detalle-id');
+    const ubicacion = input.getAttribute('data-ubicacion');
+    const cantidadContada = parseFloat(input.value); // Convertir a número
+
+    // Validar que la cantidad no sea negativa
+    if (cantidadContada < 0) {
+        alert("La cantidad contada no puede ser negativa.");
+
+        // Obtener el último valor registrado desde la base de datos
+        fetch(`{{ url_for('inventario.obtener_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ubicacion: ubicacion
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Restablecer el valor del campo de entrada con el último valor registrado
+                input.value = data.cantidad_contada || 0; // Si no hay valor, mostrar 0
+            } else {
+                alert('Error al obtener el último valor registrado.');
+                input.value = 0; // Restablecer a 0 si hay un error
+            }
+            // Poner el foco en el campo de escaneo
+            document.getElementById('codigo-barras').focus();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            input.value = 0; // Restablecer a 0 si hay un error
+            document.getElementById('codigo-barras').focus();
         });
 
-        // Función para actualizar la cantidad contada en una ubicación
-        function actualizarCantidadUbicacion(input) {
-            const detalleId = input.getAttribute('data-detalle-id');
-            const ubicacion = input.getAttribute('data-ubicacion');
-            const cantidadContada = parseFloat(input.value); // Convertir a número
+        return; // Detener la ejecución de la función
+    }
 
-            // Validar que la cantidad no sea negativa
-            if (cantidadContada < 0) {
-                alert("La cantidad contada no puede ser negativa.");
+    // Si la cantidad es válida, proceder con la actualización
+    fetch(`{{ url_for('inventario.actualizar_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ubicacion: ubicacion,
+            cantidad_contada: cantidadContada
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar la sumatoria y las diferencias en la tabla
+            const sumatoriaCell = input.closest('tr').querySelector('td:nth-child(2)'); // Columna 3: Sumatoria
+            const diferenciaCell = input.closest('tr').querySelector('td:nth-child(4)'); // Columna 5: Diferencias
 
-                // Obtener el último valor registrado desde la base de datos
-                fetch(`{{ url_for('inventario.obtener_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ubicacion: ubicacion
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Restablecer el valor del campo de entrada con el último valor registrado
-                        input.value = data.cantidad_contada || 0; // Si no hay valor, mostrar 0
-                    } else {
-                        alert('Error al obtener el último valor registrado.');
-                        input.value = 0; // Restablecer a 0 si hay un error
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    input.value = 0; // Restablecer a 0 si hay un error
-                });
-
-                return; // Detener la ejecución de la función
-            }
-
-            // Si la cantidad es válida, proceder con la actualización
-            fetch(`{{ url_for('inventario.actualizar_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ubicacion: ubicacion,
-                    cantidad_contada: cantidadContada
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Actualizar la sumatoria y las diferencias en la tabla
-                    const sumatoriaCell = input.closest('tr').querySelector('td:nth-child(2)'); // Columna 3: Sumatoria
-                    const diferenciaCell = input.closest('tr').querySelector('td:nth-child(4)'); // Columna 5: Diferencias
-
-                    sumatoriaCell.textContent = data.sumatoria_cantidad;
-                    diferenciaCell.textContent = data.diferencias;
-                    diferenciaCell.className = data.diferencias < 0 ? 'text-danger' : 'text-success';
-                    input.focus();
-                } else {
-                    alert('Error al actualizar la cantidad contada en la ubicación.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            sumatoriaCell.textContent = data.sumatoria_cantidad;
+            diferenciaCell.textContent = data.diferencias;
+            diferenciaCell.className = data.diferencias < 0 ? 'text-danger' : 'text-success';
+            
+            // Poner el foco en el campo de escaneo
+            document.getElementById('codigo-barras').focus();
+        } else {
+            alert('Error al actualizar la cantidad contada en la ubicación.');
+            document.getElementById('codigo-barras').focus();
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('codigo-barras').focus();
+    });
+}
 
         // Actualizar la ubicación en todos los campos de cantidad contada por ubicación
         document.getElementById('ubicacion-select').addEventListener('change', function() {

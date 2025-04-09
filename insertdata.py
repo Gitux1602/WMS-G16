@@ -1,4 +1,4 @@
-#import pandas as pd
+import pandas as pd
 from app import create_app, db
 from app.models import CodigoBarras, Proveedor, Articulo,  CodigoBarras, User
 
@@ -109,6 +109,7 @@ with app.app_context():
     else:
         print("Proveedor no encontrado.")
 """
+"""
 #Asigna rol de administrador = (1) dado el User.query.get(id) de la tabla User
 with app.app_context():
     usuarioadmin = User.query.get(2)
@@ -121,3 +122,12 @@ with app.app_context():
         print("Rol de usuario actualizado correctamente a admin")
     else:
         print("Usuario no encontrado")
+"""
+with app.app_context():
+    userD = User.query.get(3)
+    if userD:
+        db.session.delete(userD)
+        db.session.commit()
+        print("Usuario eliminado")
+    else:
+        print("Usuario  no encontrado")
