@@ -1,2 +1,2 @@
 # WMS-G16
-Este proyecto consiste en un escáner de códigos QR diseñado para integrarse con un Sistema de Gestión de Almacenes (WMS) y SAP Business One (B1) utilizando HANA SQL como base de datos principal. La herramienta permite realizar un seguimiento eficiente del inventario, facilitando la consulta y actualización de los datos en tiempo real.
+Este proyecto consiste en un escáner de códigos QR diseñado para integrarse con un Sistema de Gestión de Almacenes (WMS) con SQlite y SAP Business One con HANA SQL. La herramienta permite realizar conteos acorde al inventario de SAP o mediante un Excel(.xlsx) para cargas manuales.
