@@ -36,5 +36,5 @@ class CreateQrForm(FlaskForm):
     codigo_barras = StringField('Código', validators=[DataRequired()])
     itemcode =  StringField('Artículo', validators=[DataRequired()])
     proveedor_id =  StringField('Código de Proveedor', validators=[DataRequired()])
-    pqt = IntegerField('Piezas por paquete', validators=[DataRequired(), NumberRange(min=0, message = 'El valor debe ser entero positivo')])
+    pqt = IntegerField('Piezas por paquete', validators=[DataRequired(), NumberRange(min=1, message = 'El valor debe ser entero positivo')])
     submit = SubmitField('Crear Código')
