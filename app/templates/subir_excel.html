@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+
 <body class="bg-light">
     <!-- Cabecera -->
     <header class="d-flex align-items-center justify-content-between px-4 py-3 custom-header">
@@ -22,16 +24,17 @@
     <main class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form method="POST" action="{{ url_for('inventario.subir_excel') }}" enctype="multipart/form-data" class="p-4 border rounded-3 shadow-sm bg-white">
+                <form method="POST" action="{{ url_for('inventario.subir_excel') }}" enctype="multipart/form-data"
+                    class="p-4 border rounded-3 shadow-sm bg-white">
                     <h2 class="mb-4 text-center">Subir Archivo Excel</h2>
-                    
+
                     <!-- Campo para seleccionar la base de datos -->
                     <div class="mb-4">
                         <label for="basedatos" class="form-label fw-bold">Selecciona la base de datos:</label>
                         <select class="form-select form-select-lg" id="basedatos" name="basedatos" required>
                             <option value="" disabled selected>Selecciona una opción</option>
                             {% for opcion in opciones_basedatos %}
-                                <option value="{{ opcion }}">{{ opcion }}</option>
+                            <option value="{{ opcion }}">{{ opcion }}</option>
                             {% endfor %}
                         </select>
                         <div class="form-text">Elige la base de datos desde la cual deseas realizar el conteo.</div>
@@ -40,7 +43,8 @@
                     <!-- Campo para subir el archivo Excel -->
                     <div class="mb-4">
                         <label for="archivo_excel" class="form-label fw-bold">Selecciona un archivo Excel:</label>
-                        <input type="file" class="form-control form-control-lg" id="archivo_excel" name="archivo_excel" required>
+                        <input type="file" class="form-control form-control-lg" id="archivo_excel" name="archivo_excel"
+                            required>
                         <div class="form-text">El archivo debe ser un archivo Excel (.xlsx).</div>
                     </div>
 
@@ -58,4 +62,5 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
