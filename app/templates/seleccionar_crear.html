@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos personalizados -->
+    <style>
+        .selection-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .selection-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .selection-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .selection-subtitle {
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+
+        /* Contenedor de botones con ancho fijo */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        /* Estilos para los botones con tamaño fijo */
+        .btn-option {
+            width: 300px; /* Ancho fijo */
+            height: 80px; /* Alto fijo */
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-option.active {
+            border-color: #3498db;
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .btn-article {
+            background-color: #f8f9fa;
+            color: #3498db;
+        }
+
+        .btn-qr {
+            background-color: #f8f9fa;
+            color: #4e73df;
+        }
+
+        /* Media queries para ajustes específicos en móviles */
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-option {
+                width: 100%; /* Ocupa todo el ancho en móviles */
+                max-width: 300px; /* Pero no más de 300px */
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="selection-container">
+            <div class="selection-header">
+                <h1 class="selection-title">Sistema de Gestión</h1>
+                <p class="selection-subtitle">Seleccione el tipo de registro que desea crear</p>
+
+                <div class="buttons-container">
+                    <a href="{{ url_for('articulo.crear_articulo') }}"
+                        class="btn btn-option btn-article">
+                        <i class="fas fa-box me-2"></i> Crear Artículo
+                    </a>
+                    <a href="{{ url_for('articulo.crear_codigo') }}"
+                        class="btn btn-option btn-qr">
+                        <i class="fas fa-qrcode me-2"></i> Generar Código QR
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import IntegerField, StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from app.models import User
 
 class RegistrationForm(FlaskForm):
@@ -25,3 +25,16 @@ class LoginForm(FlaskForm):
     password = PasswordField('Contraseña', validators=[DataRequired()])
     submit = SubmitField('Iniciar Sesión')
 
+
+class CreateItemForm(FlaskForm):
+    itemcode  = StringField('Artículo', validators=[DataRequired()])
+    descripcion = StringField('Descripción', validators=[DataRequired()])
+    frngname = StringField('Nombre Extranjero', validators=[DataRequired()])
+    submit = SubmitField('Crear Articulo')
+
+class CreateQrForm(FlaskForm):
+    codigo_barras = StringField('Código', validators=[DataRequired()])
+    itemcode =  StringField('Artículo', validators=[DataRequired()])
+    proveedor_id =  StringField('Código de Proveedor', validators=[DataRequired()])
+    pqt = IntegerField('Piezas por paquete', validators=[DataRequired(), NumberRange(min=0, message = 'El valor debe ser entero positivo')])
+    submit = SubmitField('Crear Código')
