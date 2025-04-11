@@ -86,9 +86,8 @@
                 <div class="mb-4">
                     {{ form.itemcode.label(class="form-label") }}
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                        {{ form.itemcode(class="form-control form-control-lg", placeholder="Ingrese el código del
-                        artículo") }}
+                        <span class="input-group-text"><i class="fas fa-cube"></i></span>
+                        {{ form.itemcode(class="form-control form-control-lg", placeholder="7518SA") }}
                     </div>
                     {% if form.itemcode.errors %}
                     <div class="text-danger mt-2">
@@ -104,8 +103,7 @@
                     {{ form.descripcion.label(class="form-label") }}
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-align-left"></i></span>
-                        {{ form.descripcion(class="form-control form-control-lg", placeholder="Ingrese la descripción
-                        del artículo") }}
+                        {{ form.descripcion(class="form-control form-control-lg", placeholder="JAMBA CABEZAL DE 2") }}
                     </div>
                     {% if form.descripcion.errors %}
                     <div class="text-danger mt-2">
@@ -121,7 +119,7 @@
                     {{ form.frngname.label(class="form-label") }}
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                        {{ form.frngname(class="form-control form-control-lg", placeholder="Ingrese el nombre FRNG") }}
+                        {{ form.frngname(class="form-control form-control-lg", placeholder="120500006100563M0E") }}
                     </div>
                     {% if form.frngname.errors %}
                     <div class="text-danger mt-2">

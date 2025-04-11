@@ -90,8 +90,8 @@
                 <div class="mb-4">
                     {{ form.codigo_barras.label(class="form-label") }}
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                        {{ form.codigo_barras(class="form-control form-control-lg", placeholder="Ingrese el código de barras") }}
+                        <span class="input-group-text"><i class="fas fa-qrcode"></i></span>
+                        {{ form.codigo_barras(class="form-control form-control-lg", placeholder="7518SA|120500006100563M0E|10") }}
                     </div>
                     {% if form.codigo_barras.errors %}
                     <div class="text-danger mt-2">
@@ -106,8 +106,8 @@
                 <div class="mb-4">
                     {{ form.itemcode.label(class="form-label") }}
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-box-open"></i></span>
-                        {{ form.itemcode(class="form-control form-control-lg", placeholder="Ingrese el código del artículo") }}
+                        <span class="input-group-text"><i class="fas fa-cube"></i></span>
+                        {{ form.itemcode(class="form-control form-control-lg", placeholder="7518SA") }}
                     </div>
                     {% if form.itemcode.errors %}
                     <div class="text-danger mt-2">
@@ -122,8 +122,8 @@
                 <div class="mb-4">
                     {{ form.proveedor_id.label(class="form-label") }}
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-truck"></i></span>
-                        {{ form.proveedor_id(class="form-control form-control-lg", placeholder="Ingrese el código de proveedor") }}
+                        <span class="input-group-text"><i class="fas fa-shipping-fast"></i></span>
+                        {{ form.proveedor_id(class="form-control form-control-lg", placeholder="P0001") }}
                     </div>
                     {% if form.proveedor_id.errors %}
                     <div class="text-danger mt-2">
@@ -139,8 +139,8 @@
                     {{ form.pqt.label(class="form-label") }}
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-cubes"></i></span>
-                        {{ form.pqt(class="form-control form-control-lg", placeholder="Ingrese cantidad de piezas por paquete") }}
-                        <span class="input-group-text units-text">unidades</span>
+                        {{ form.pqt(class="form-control form-control-lg", placeholder="6") }}
+                        <span class="input-group-text units-text">Piezas</span>
                     </div>
                     {% if form.pqt.errors %}
                     <div class="text-danger mt-2">
@@ -154,7 +154,7 @@
                 <!-- Botón de Submit -->
                 <div class="d-grid mt-5">
                     <button type="submit" class="btn btn-submit btn-qr-submit btn-lg">
-                        <i class="fas fa-qrcode me-2"></i> Generar Código QR
+                        <i class="fas fa-save me-2"></i> Crear Código
                     </button>
                 </div>
 

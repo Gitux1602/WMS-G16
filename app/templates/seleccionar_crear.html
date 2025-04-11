@@ -100,7 +100,7 @@
     <div class="container py-4">
         <div class="selection-container">
             <div class="selection-header">
-                <h1 class="selection-title">Sistema de Gestión</h1>
+                <h1 class="selection-title">Sistema de Almacén - G16</h1>
                 <p class="selection-subtitle">Seleccione el tipo de registro que desea crear</p>
 
                 <div class="buttons-container">
@@ -110,7 +110,14 @@
                     </a>
                     <a href="{{ url_for('articulo.crear_codigo') }}"
                         class="btn btn-option btn-qr">
-                        <i class="fas fa-qrcode me-2"></i> Generar Código QR
+                        <i class="fas fa-qrcode me-2"></i> Crear Código
+                    </a>
+                </div>
+                
+                <!-- Botón de regresar centrado -->
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('main.home') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Regresar
                     </a>
                 </div>
             </div>
