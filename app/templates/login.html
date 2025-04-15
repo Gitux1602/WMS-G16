@@ -2,43 +2,183 @@
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
+<div class="login-wrapper">
     <div class="login-container">
-        <!-- Logo centrado y más grande -->
-        <div class="text-center mb-4">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto;">
-        </div>            
 
-        <h2 class="text-center mb-4">Iniciar Sesión</h2>
-        <form method="POST" class="form-container">
-            {{ form.hidden_tag() }} 
+        <div class="text-center mb-4 logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="img-fluid login-logo">
+        </div>
 
-            <div class="form-group">
-                {{ form.email.label }}
-                {{ form.email(class="form-control", placeholder="Ingresa tu correo electrónico") }}
+        <h2 class="text-center mb-4 login-title">Iniciar Sesión</h2>
+        <form method="POST" class="login-form">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control login-input", placeholder="Ingresa tu correo electrónico") }}
                 {% if form.email.errors %}
-                    <div class="text-danger">
-                        {% for error in form.email.errors %}
-                            <small>{{ error }}</small><br>
-                        {% endfor %}
-                    </div>
+                <div class="invalid-feedback d-block">
+                    {% for error in form.email.errors %}
+                    <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.password.label }}
-                {{ form.password(class="form-control", placeholder="Ingresa tu contraseña") }}
+            <div class="form-group mb-4">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control login-input", placeholder="Ingresa tu contraseña") }}
                 {% if form.password.errors %}
-                    <div class="text-danger">
-                        {% for error in form.password.errors %}
-                            <small>{{ error }}</small><br>
-                        {% endfor %}
-                    </div>
+                <div class="invalid-feedback d-block">
+                    {% for error in form.password.errors %}
+                    <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
                 {% endif %}
             </div>
 
             <div class="form-group">
-                {{ form.submit(class="btn btn-primary w-100") }}
+                {{ form.submit(class="btn login-btn w-100") }}
             </div>
         </form>
     </div>
+</div>
+
+<style>
+    :root {
+        --soft-blue: #6c9bcf;
+        --lighter-blue: #e6f0fa;
+        --darker-blue: #4a7bb9;
+        --text-color: #333;
+        --light-gray: #f8f9fa;
+        --border-color: #dee2e6;
+    }
+
+    body {
+        background-color: var(--light-gray);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .login-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .login-title {
+        color: var(--text-color);
+        font-weight: 600;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .login-logo {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-form {
+        margin-top: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .login-input {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        transition: border-color 0.2s;
+    }
+
+    .login-input:focus {
+        border-color: var(--soft-blue);
+        box-shadow: 0 0 0 0.2rem rgba(108, 155, 207, 0.2);
+        outline: none;
+    }
+
+    .login-btn {
+        background-color: var(--soft-blue);
+        border: none;
+        padding: 0.75rem;
+        font-weight: 500;
+        border-radius: 6px;
+        color: white;
+        transition: background-color 0.2s;
+    }
+
+    .login-btn:hover {
+        background-color: var(--darker-blue);
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .login-container {
+            padding: 2rem;
+        }
+
+        .login-logo {
+            max-width: 200px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .login-container {
+            padding: 1.5rem;
+        }
+
+        .login-logo {
+            max-width: 180px;
+        }
+    }
+
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    @media (max-width: 400px) {
+        .login-container {
+            padding: 1.25rem;
+        }
+
+        .login-logo {
+            max-width: 150px;
+        }
+    }
+</style>
 {% endblock %}

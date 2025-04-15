@@ -7,49 +7,235 @@
     <title>Conteo SAP - Documento {{ inventario.docnum }}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #4a89dc;
+            --light-blue: #e6f0fa;
+            --dark-blue: #2c3e50;
+            --success-color: #37bc9b;
+            --danger-color: #e74c3c;
+            --warning-color: #f6bb42;
+            --border-color: #e0e6ed;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .custom-header {
+            background: linear-gradient(135deg, var(--dark-blue), #1a2a3a);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary {
+            background-color: var(--light-blue);
+            color: var(--dark-blue);
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d6e4f2;
+        }
+
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--primary-blue);
+            font-weight: 500;
+            border-bottom: none;
+            padding: 12px 20px;
+        }
+
+        .badge.estado {
+            font-weight: 500;
+            padding: 5px 10px;
+            font-size: 0.85rem;
+            border-radius: 50px;
+        }
+
+        .bg-success {
+            background-color: var(--success-color) !important;
+        }
+
+        .bg-danger {
+            background-color: var(--danger-color) !important;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(74, 137, 220, 0.2);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background-color: #f8fafc;
+            color: var(--dark-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(74, 137, 220, 0.05);
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(248, 250, 252, 0.5);
+        }
+
+        .text-danger {
+            color: var(--danger-color) !important;
+        }
+
+        .text-success {
+            color: var(--success-color) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a70c2;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .cantidad-ubicacion {
+            max-width: 100px;
+            text-align: center;
+        }
+
+        #codigo-barras {
+            font-size: 1.1rem;
+            padding: 10px 15px;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .custom-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .custom-header h1 {
+                margin-bottom: 10px;
+            }
+
+            .card-body .row>div {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-light">
     <!-- Cabecera -->
-    <header class="d-flex align-items-center justify-content-between px-2 py-2 custom-header">
-        <h1 class="text-white text-center flex-grow-1 m-0" style="font-size: 1.5rem;">Conteo SAP - Documento {{
-            inventario.docnum }}</h1>
+    <header class="d-flex flex-wrap align-items-center justify-content-between px-4 py-3 custom-header">
+        <h1 class="text-white flex-grow-1 m-0">
+            <i class="fas fa-clipboard-check me-2"></i>Conteo SAP - Documento {{ inventario.docnum }}
+        </h1>
         <a href="{{ url_for('inventarios_estado.inventarios_abiertos') if inventario.estado == 'Abierto' else url_for('inventarios_estado.inventarios_cerrados') }}"
-            class="btn btn-secondary btn-sm">
-            Regresar a {{ 'Inventarios Abiertos' if inventario.estado == 'Abierto' else 'Inventarios Cerrados' }}
+            class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Regresar a {{ 'Inventarios Abiertos' if inventario.estado == 'Abierto'
+            else 'Inventarios Cerrados' }}
         </a>
     </header>
+
     <!-- Cuerpo principal -->
-    <main class="container-fluid mt-3">
+    <main class="container-fluid mt-4">
         <!-- Información del documento -->
-        <div class="card mb-3 shadow">
-            <div class="card-header bg-primary text-white">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex align-items-center">
+                <i class="fas fa-file-invoice me-2"></i>
                 <h5 class="card-title mb-0">Información del Documento</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12 col-md-6">
-                        <p><strong>Número de Documento:</strong> {{ inventario.docnum }}</p>
-                        <p><strong>Fecha de Inicio:</strong> {{ inventario.fechaInicio.strftime('%d/%m/%Y') }}</p>
-                        <p><strong>Almacén:</strong> {{ inventario.almacen }}</p>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="text-muted small">Número de Documento</label>
+                            <p class="fw-bold">{{ inventario.docnum }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Fecha de Inicio</label>
+                            <p class="fw-bold">{{ inventario.fechaInicio.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Almacén</label>
+                            <p class="fw-bold">{{ inventario.almacen }}</p>
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <p><strong>Estado:</strong>
-                            <span id="estado-{{ inventario.docnum }}"
-                                class="badge estado {% if inventario.estado == 'Abierto' %}bg-success{% else %}bg-danger{% endif %}">
-                                {{ inventario.estado }}
-                            </span>
-                        </p>
-                        <p><strong>Fecha Fin:</strong> <span id="fechaFin-{{ inventario.docnum }}">{{
-                                inventario.fechaFin if inventario.fechaFin else 'Pendiente' }}</span></p>
-                        <p><strong>Base de Datos:</strong> {{ inventario.basedatos.value }}</p>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="text-muted small">Estado</label>
+                            <p>
+                                <span id="estado-{{ inventario.docnum }}"
+                                    class="badge estado {% if inventario.estado == 'Abierto' %}bg-success{% else %}bg-danger{% endif %}">
+                                    <i
+                                        class="fas {% if inventario.estado == 'Abierto' %}fa-unlock{% else %}fa-lock{% endif %} me-1"></i>
+                                    {{ inventario.estado }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Fecha Fin</label>
+                            <p class="fw-bold" id="fechaFin-{{ inventario.docnum }}">{{
+                                inventario.fechaFin.strftime('%d/%m/%Y') if inventario.fechaFin else 'Pendiente' }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Base de Datos</label>
+                            <p class="fw-bold">{{ inventario.basedatos.value }}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-3">
+                <div class="row mt-2">
                     <div class="col-12">
-                        <label for="ubicacion-select"><strong>Ubicación Actual:</strong></label>
-                        <select id="ubicacion-select" class="form-select form-select-sm">
+                        <label for="ubicacion-select" class="form-label fw-bold">Ubicación Actual</label>
+                        <select id="ubicacion-select" class="form-select">
                             {% for ubicacion in UBICACIONES_PREDEFINIDAS %}
                             <option value="{{ ubicacion }}">{{ ubicacion }}</option>
                             {% endfor %}
@@ -58,194 +244,124 @@
                 </div>
             </div>
         </div>
+
         <!-- Escanear Código -->
-        <div class="mb-3">
-            <input type="hidden" id="docnum" value="{{ inventario.docnum }}">
-            <label for="codigo-barras"><strong>Escanear Código:</strong></label>
-            <div class="input-group">
-                <input type="text" class="form-control form-control-sm" id="codigo-barras"
-                    placeholder="Escanea el código" {% if inventario.estado=='Cerrado' %}disabled{% endif %}>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <label for="codigo-barras" class="form-label fw-bold">
+                    <i class="fas fa-barcode me-2"></i>Escanear Código
+                </label>
+                <input type="hidden" id="docnum" value="{{ inventario.docnum }}">
+                <input type="text" class="form-control" id="codigo-barras"
+                    placeholder="Escanea el código de barras o QR" {% if inventario.estado=='Cerrado' %}disabled{% endif
+                    %}>
             </div>
         </div>
+
         <!-- Detalles del inventario -->
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
+        <div class="card shadow-sm">
+            <div class="card-header">
                 <h5 class="card-title mb-0">Detalles del Inventario</h5>
             </div>
-            <div class="card-body table-responsive">
-                <!-- En la sección de la tabla (cambiar el thead y tbody) -->
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Artículo</th>
-                            <!-- <th>Stock</th> --> 
-                            <th>Suma Cantidad</th>
-                            <th>Cantidad Ubicación</th>
-                            <th>Diferencias</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for detalle in detalles %}
-                        <tr data-itemcode="{{ detalle.itemcode }}">
-                            <td>{{ detalle.articulo.descripcion }} ({{ detalle.itemcode }})</td>
-                            <!-- <td>{{ detalle.cantidad_almacen }}</td> --> 
-                            <td>{{ detalle.sumatoria_cantidad }}</td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm cantidad-ubicacion"
-                                    data-detalle-id="{{ detalle.id }}"
-                                    data-ubicacion="{{ UBICACIONES_PREDEFINIDAS[0] }}"
-                                    onchange="actualizarCantidadUbicacion(this)" min="0"
-                                    value="{{ detalle.cantidades_por_ubicacion[UBICACIONES_PREDEFINIDAS[0]] }}" {% if
-                                    inventario.estado=='Cerrado' %}disabled{% endif %}>
-                            </td>
-                            <td class="{{ 'text-danger' if detalle.diferencias < 0 else 'text-success' }}">
-                                {{ detalle.diferencias }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Artículo</th>
+                                <th class="text-end">Suma Cantidad</th>
+                                <th class="text-center">Cantidad Ubicación</th>
+                                <th class="text-end">Diferencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in detalles %}
+                            <tr data-itemcode="{{ detalle.itemcode }}">
+                                <td>
+                                    <strong>{{ detalle.articulo.descripcion }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ detalle.itemcode }}</small>
+                                </td>
+                                <td class="text-end">{{ detalle.sumatoria_cantidad }}</td>
+                                <td class="text-center">
+                                    <div class="input-group input-group-sm" style="max-width: 120px; margin: 0 auto;">
+                                        <input type="number" class="form-control text-center cantidad-ubicacion"
+                                            data-detalle-id="{{ detalle.id }}"
+                                            data-ubicacion="{{ UBICACIONES_PREDEFINIDAS[0] }}"
+                                            onchange="actualizarCantidadUbicacion(this)" min="0"
+                                            value="{{ detalle.cantidades_por_ubicacion[UBICACIONES_PREDEFINIDAS[0]] }}"
+                                            {% if inventario.estado=='Cerrado' %}disabled{% endif %}>
+                                    </div>
+                                </td>
+                                <td
+                                    class="text-end {{ 'text-danger' if detalle.diferencias < 0 else 'text-success' }} fw-bold">
+                                    {{ detalle.diferencias }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="mt-3">
-            <p><strong>Comentarios:</strong></p>
-            <form id="comentariosForm"
-                action="{{ url_for('inventario.actualizar_comentarios', docnum=inventario.docnum) }}" method="POST">
-                <textarea class="form-control form-control-sm" name="comentarios"
-                    rows="3">{{ inventario.comentarios if inventario.comentarios }}</textarea>
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                    <button type="submit" class="btn btn-primary btn-sm">Guardar Comentarios</button>
-                    {% if inventario.estado == 'Abierto' and current_user.rol != 0%}
-                    <button type="button" id="cerrar-btn-{{ inventario.docnum }}" class="btn btn-danger btn-sm"
-                        onclick="cerrarDocumento('{{ inventario.docnum }}')">
-                        Cerrar Documento
-                    </button>
-                    {% endif %}
-                </div>
-            </form>
+
+        <!-- Comentarios -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    <i class="fas fa-comment me-2"></i>Comentarios
+                </h5>
+                <form id="comentariosForm"
+                    action="{{ url_for('inventario.actualizar_comentarios', docnum=inventario.docnum) }}" method="POST">
+                    <textarea class="form-control" name="comentarios" rows="3"
+                        placeholder="Agregar comentarios sobre el inventario...">{{ inventario.comentarios if inventario.comentarios }}</textarea>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Guardar Comentarios
+                        </button>
+                        {% if inventario.estado == 'Abierto' and current_user.rol != 0%}
+                        <button type="button" id="cerrar-btn-{{ inventario.docnum }}" class="btn btn-danger"
+                            onclick="cerrarDocumento('{{ inventario.docnum }}')">
+                            <i class="fas fa-lock me-1"></i>Cerrar Documento
+                        </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
         </div>
     </main>
-</body>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
+    <script>
+        // [El resto del JavaScript permanece igual]
+        window.onload = function () {
+            const inputEscaneo = document.getElementById('codigo-barras');
+            if (inputEscaneo && !inputEscaneo.disabled) {
+                inputEscaneo.focus();
+            }
 
-    window.onload = function () {
-        const inputEscaneo = document.getElementById('codigo-barras');
-        if (inputEscaneo && !inputEscaneo.disabled) {
-            inputEscaneo.focus();
-        }
+            // Restaurar ubicación seleccionada
+            const selectUbicacion = document.getElementById('ubicacion-select');
+            const savedUbicacion = localStorage.getItem('ubicacionSeleccionada');
 
-        // Restaurar ubicación seleccionada
-        const selectUbicacion = document.getElementById('ubicacion-select');
-        const savedUbicacion = localStorage.getItem('ubicacionSeleccionada');
-
-        if (savedUbicacion) {
-            selectUbicacion.value = savedUbicacion;
-            document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
-                input.setAttribute('data-ubicacion', savedUbicacion);
-                actualizarCampoUbicacion(input, savedUbicacion);
-            });
-        } else {
-            // Guardar por defecto la ubicación inicial
-            localStorage.setItem('ubicacionSeleccionada', selectUbicacion.value);
-        }
-    };
-
-
-
-
-    // Función para actualizar el campo de entrada con el valor de la ubicación seleccionada
-    function actualizarCampoUbicacion(input, ubicacion) {
-        const detalleId = input.getAttribute('data-detalle-id');
-
-        fetch(`{{ url_for('inventario.obtener_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                ubicacion: ubicacion
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Actualizar el valor del campo de entrada
-                    input.value = data.cantidad_contada || 0; // Si no hay valor, mostrar 0
-                } else {
-                    alert('Error al obtener la cantidad contada en la ubicación.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-    function cerrarDocumento(docnum) {
-        console.log("Función cerrarDocumento llamada con:", docnum);
-        if (confirm("¿Estás seguro de que deseas cerrar este documento?")) {
-            fetch(`/cerrar_documento/${docnum}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la solicitud');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        // Recargar la página para reflejar los cambios
-                        window.location.reload();
-                    } else {
-                        alert(`Error: ${data.message}`);
-                    }
-                })
-                .catch(error => {
-                    alert("Hubo un error al cerrar el documento.");
-                    console.error("Error:", error);
+            if (savedUbicacion) {
+                selectUbicacion.value = savedUbicacion;
+                document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
+                    input.setAttribute('data-ubicacion', savedUbicacion);
+                    actualizarCampoUbicacion(input, savedUbicacion);
                 });
-        }
-    }
+            } else {
+                // Guardar por defecto la ubicación inicial
+                localStorage.setItem('ubicacionSeleccionada', selectUbicacion.value);
+            }
+        };
 
+        // Función para actualizar el campo de entrada con el valor de la ubicación seleccionada
+        function actualizarCampoUbicacion(input, ubicacion) {
+            const detalleId = input.getAttribute('data-detalle-id');
 
-
-    // Escuchar el cambio de ubicación
-    document.getElementById('ubicacion-select').addEventListener('change', function () {
-        const ubicacion = this.value;
-
-        // Guardar la ubicación seleccionada en localStorage
-        localStorage.setItem('ubicacionSeleccionada', ubicacion);
-
-        // Actualizar todos los campos de cantidad contada por ubicación
-        document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
-            input.setAttribute('data-ubicacion', ubicacion);
-            actualizarCampoUbicacion(input, ubicacion); // Actualizar el valor del campo
-        });
-
-        // Poner el foco en el campo de escaneo
-        const inputEscaneo = document.getElementById('codigo-barras');
-        if (inputEscaneo && !inputEscaneo.disabled) {
-            inputEscaneo.focus();
-        }
-    });
-
-    function actualizarCantidadUbicacion(input) {
-        const detalleId = input.getAttribute('data-detalle-id');
-        const ubicacion = input.getAttribute('data-ubicacion');
-        const cantidadContada = parseFloat(input.value); // Convertir a número
-
-        // Validar que la cantidad no sea negativa
-        if (cantidadContada < 0) {
-            alert("La cantidad contada no puede ser negativa.");
-
-            // Obtener el último valor registrado desde la base de datos
             fetch(`{{ url_for('inventario.obtener_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
                 method: 'POST',
                 headers: {
@@ -258,129 +374,198 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Restablecer el valor del campo de entrada con el último valor registrado
+                        // Actualizar el valor del campo de entrada
                         input.value = data.cantidad_contada || 0; // Si no hay valor, mostrar 0
                     } else {
-                        alert('Error al obtener el último valor registrado.');
-                        input.value = 0; // Restablecer a 0 si hay un error
+                        alert('Error al obtener la cantidad contada en la ubicación.');
                     }
-                    // Poner el foco en el campo de escaneo
-                    document.getElementById('codigo-barras').focus();
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    input.value = 0; // Restablecer a 0 si hay un error
+                });
+        }
+
+        function cerrarDocumento(docnum) {
+            console.log("Función cerrarDocumento llamada con:", docnum);
+            if (confirm("¿Estás seguro de que deseas cerrar este documento?")) {
+                fetch(`/cerrar_documento/${docnum}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la solicitud');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            // Recargar la página para reflejar los cambios
+                            window.location.reload();
+                        } else {
+                            alert(`Error: ${data.message}`);
+                        }
+                    })
+                    .catch(error => {
+                        alert("Hubo un error al cerrar el documento.");
+                        console.error("Error:", error);
+                    });
+            }
+        }
+
+        // Escuchar el cambio de ubicación
+        document.getElementById('ubicacion-select').addEventListener('change', function () {
+            const ubicacion = this.value;
+
+            // Guardar la ubicación seleccionada en localStorage
+            localStorage.setItem('ubicacionSeleccionada', ubicacion);
+
+            // Actualizar todos los campos de cantidad contada por ubicación
+            document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
+                input.setAttribute('data-ubicacion', ubicacion);
+                actualizarCampoUbicacion(input, ubicacion); // Actualizar el valor del campo
+            });
+
+            // Poner el foco en el campo de escaneo
+            const inputEscaneo = document.getElementById('codigo-barras');
+            if (inputEscaneo && !inputEscaneo.disabled) {
+                inputEscaneo.focus();
+            }
+        });
+
+        function actualizarCantidadUbicacion(input) {
+            const detalleId = input.getAttribute('data-detalle-id');
+            const ubicacion = input.getAttribute('data-ubicacion');
+            const cantidadContada = parseFloat(input.value); // Convertir a número
+            const fila = input.closest('tr'); // Obtener la fila completa
+
+            // Validar que la cantidad no sea negativa
+            if (cantidadContada < 0) {
+                alert("La cantidad contada no puede ser negativa.");
+                input.value = 0;
+                document.getElementById('codigo-barras').focus();
+                return;
+            }
+
+            // Mostrar loader o indicador de procesamiento si es necesario
+            fila.classList.add('updating');
+
+            // Si la cantidad es válida, proceder con la actualización
+            fetch(`{{ url_for('inventario.actualizar_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ubicacion: ubicacion,
+                    cantidad_contada: cantidadContada
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar ambas columnas
+                        const sumatoriaCell = fila.querySelector('td:nth-child(2)'); // Suma Cantidad
+                        const diferenciaCell = fila.querySelector('td:nth-child(4)'); // Diferencias
+
+                        // Actualizar los valores
+                        sumatoriaCell.textContent = data.sumatoria_cantidad;
+                        diferenciaCell.textContent = data.diferencias;
+
+                        // Aplicar estilos según el valor
+                        diferenciaCell.className = data.diferencias < 0 ?
+                            'text-danger text-end fw-bold' :
+                            'text-success text-end fw-bold';
+
+                        // Poner el foco en el campo de escaneo
+                        document.getElementById('codigo-barras').focus();
+                    } else {
+                        alert('Error al actualizar la cantidad contada: ' + (data.message || ''));
+                        document.getElementById('codigo-barras').focus();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error de conexión al actualizar la cantidad');
                     document.getElementById('codigo-barras').focus();
+                })
+                .finally(() => {
+                    fila.classList.remove('updating');
+                });
+        }
+
+        // Actualizar la ubicación en todos los campos de cantidad contada por ubicación
+        document.getElementById('ubicacion-select').addEventListener('change', function () {
+            const ubicacion = this.value;
+            document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
+                input.setAttribute('data-ubicacion', ubicacion);
+            });
+        });
+
+        let codigoEscaneado = ''; // Variable para acumular los caracteres escaneados
+
+        function escanearCodigo(codigo) {
+            console.log(`[FE] Código QR escaneado: ${codigo}`);
+
+            // Obtener la ubicación seleccionada
+            const ubicacion = document.getElementById('ubicacion-select').value;
+
+            // Obtener el docnum del campo oculto
+            const docnum = document.getElementById('docnum').value;
+
+            // Enviar el código escaneado al backend
+            fetch(`/procesar_codigo_qr`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    codigo_qr: codigo,
+                    ubicacion: ubicacion,
+                    docnum: docnum
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(`[BE] Respuesta del backend: ${JSON.stringify(data)}`);
+                        // Actualizar el grid con los nuevos datos
+                        actualizarGrid(data.itemcode, data.descripcion, data.sumatoria_cantidad, data.cantidad_ubicacion, data.diferencias);
+                    } else {
+                        console.error(`[BE] Error: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error(`[BE] Error en la solicitud: ${error}`);
                 });
 
-            return; // Detener la ejecución de la función
+            // Limpiar el campo de entrada
+            document.getElementById('codigo-barras').value = '';
         }
 
-        // Si la cantidad es válida, proceder con la actualización
-        fetch(`{{ url_for('inventario.actualizar_cantidad_ubicacion', detalle_id=0) }}`.replace("0", detalleId), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                ubicacion: ubicacion,
-                cantidad_contada: cantidadContada
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Actualizar la sumatoria y las diferencias en la tabla
-                    const sumatoriaCell = input.closest('tr').querySelector('td:nth-child(2)'); // Columna 3: Sumatoria
-                    const diferenciaCell = input.closest('tr').querySelector('td:nth-child(4)'); // Columna 5: Diferencias
+        function actualizarGrid(itemcode, descripcion, sumatoriaCantidad, cantidadUbicacion, diferencias) {
+            // Buscar la fila correspondiente en la tabla
+            const fila = document.querySelector(`tr[data-itemcode="${itemcode}"]`);
+            if (fila) {
+                fila.querySelector('td:nth-child(1)').innerHTML = `<strong>${descripcion}</strong><br><small class="text-muted">${itemcode}</small>`;
+                fila.querySelector('td:nth-child(2)').textContent = sumatoriaCantidad;
+                fila.querySelector('td:nth-child(3) input').value = cantidadUbicacion;
+                fila.querySelector('td:nth-child(4)').textContent = diferencias;
+                fila.querySelector('td:nth-child(4)').className = diferencias < 0 ? 'text-danger text-end' : 'text-success text-end';
+            } else {
+                console.error(`No se encontró la fila para el artículo con código: ${itemcode}`);
+            }
+        }
 
-                    sumatoriaCell.textContent = data.sumatoria_cantidad;
-                    diferenciaCell.textContent = data.diferencias;
-                    diferenciaCell.className = data.diferencias < 0 ? 'text-danger' : 'text-success';
-
-                    // Poner el foco en el campo de escaneo
-                    document.getElementById('codigo-barras').focus();
-                } else {
-                    alert('Error al actualizar la cantidad contada en la ubicación.');
-                    document.getElementById('codigo-barras').focus();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('codigo-barras').focus();
-            });
-    }
-
-    // Actualizar la ubicación en todos los campos de cantidad contada por ubicación
-    document.getElementById('ubicacion-select').addEventListener('change', function () {
-        const ubicacion = this.value;
-        document.querySelectorAll('.cantidad-ubicacion').forEach(input => {
-            input.setAttribute('data-ubicacion', ubicacion);
+        // Escuchar eventos de entrada en el campo de texto
+        document.getElementById('codigo-barras').addEventListener('input', function (event) {
+            const codigo = event.target.value.trim().replace(/[\r\n]/g, '');
+            escanearCodigo(codigo);
         });
-    });
-
-    let codigoEscaneado = ''; // Variable para acumular los caracteres escaneados
-
-    function escanearCodigo(codigo) {
-        console.log(`[FE] Código QR escaneado: ${codigo}`);
-
-        // Obtener la ubicación seleccionada
-        const ubicacion = document.getElementById('ubicacion-select').value;
-
-        // Obtener el docnum del campo oculto
-        const docnum = document.getElementById('docnum').value;
-
-        // Enviar el código escaneado al backend
-        fetch(`/procesar_codigo_qr`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                codigo_qr: codigo,
-                ubicacion: ubicacion,
-                docnum: docnum
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(`[BE] Respuesta del backend: ${JSON.stringify(data)}`);
-                    // Actualizar el grid con los nuevos datos
-                    actualizarGrid(data.itemcode, data.descripcion, data.sumatoria_cantidad, data.cantidad_ubicacion, data.diferencias);
-                } else {
-                    console.error(`[BE] Error: ${data.message}`);
-                } 
-            })
-            .catch(error => {
-                console.error(`[BE] Error en la solicitud: ${error}`);
-            });
-
-        // Limpiar el campo de entrada
-        document.getElementById('codigo-barras').value = '';
-    }
-
-    function actualizarGrid(itemcode, descripcion, sumatoriaCantidad, cantidadUbicacion, diferencias) {
-        // Buscar la fila correspondiente en la tabla
-        const fila = document.querySelector(`tr[data-itemcode="${itemcode}"]`);
-        if (fila) {
-            fila.querySelector('td:nth-child(1)').textContent = `${descripcion} (${itemcode})`; // Descripción y código
-            fila.querySelector('td:nth-child(2)').textContent = sumatoriaCantidad; // Sumatoria
-            fila.querySelector('td:nth-child(3) input').value = cantidadUbicacion; // Cantidad Contada Ubicación
-            fila.querySelector('td:nth-child(4)').textContent = diferencias; // Diferencias
-        } else {
-            console.error(`No se encontró la fila para el artículo con código: ${itemcode}`);
-        }
-    }
-
-    // Escuchar eventos de entrada en el campo de texto
-    document.getElementById('codigo-barras').addEventListener('input', function (event) {
-        const codigo = event.target.value.trim().replace(/[\r\n]/g, '');
-        escanearCodigo(codigo);
-    });
-
-
-</script>
+    </script>
 </body>
 
 </html>

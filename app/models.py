@@ -25,7 +25,7 @@ class Articulo(db.Model):
     frngname = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
-        return f"Articulo('{self.itemcode}', '{self.descripcion}', '{self.precio}')"
+        return f"Articulo('{self.itemcode}', '{self.descripcion}', '{self.frngname}')"
 
 
 class Proveedor(db.Model):

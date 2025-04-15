@@ -67,11 +67,71 @@
         .back-button {
             margin-top: 1rem;
         }
+
+        /* Estilos para el loader */
+        .loader-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animación para los mensajes flash */
+        .alert {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
-</head>
+</head> 
 
 <body class="bg-light">
+    <!-- Loader overlay -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+    </div>
+
     <div class="container py-4">
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle me-2"></i>
+                        {% else %}
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <div class="form-container">
             <div class="form-header">
                 <i class="fas fa-box"></i>
@@ -79,7 +139,7 @@
                 <p class="text-muted">Complete los datos del artículo</p>
             </div>
 
-            <form method="POST">
+            <form method="POST" id="articleForm">
                 {{ form.hidden_tag() }}
 
                 <!-- Campo Código de Artículo -->
@@ -132,7 +192,7 @@
 
                 <!-- Botón de Submit -->
                 <div class="d-grid mt-5">
-                    <button type="submit" class="btn btn-submit btn-article-submit btn-lg">
+                    <button type="submit" class="btn btn-submit btn-article-submit btn-lg" id="submitBtn">
                         <i class="fas fa-save me-2"></i> Crear Artículo
                     </button>
                 </div>
@@ -148,6 +208,31 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para manejar el loader y el formulario -->
+    <script>
+        document.getElementById('articleForm').addEventListener('submit', function() {
+            // Mostrar loader
+            document.getElementById('loader').style.display = 'flex';
+            
+            // Deshabilitar el botón de submit
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Procesando...';
+        });
+
+        // Si hay mensajes flash, ocultarlos después de 5 segundos
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.add('fade');
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -28,7 +28,8 @@ def login():
             login_user(user)
             return redirect(url_for('main.home'))  # Redirige a la página principal
         else:
-            flash('Inicio de sesión fallido. Verifica tus credenciales.', 'danger')  # Muestra un mensaje de error
+            print("Credenciales incorrectas")
+            # flash('Inicio de sesión fallido. Verifica tus credenciales.', 'danger')  # Muestra un mensaje de error
     
     # Renderiza la plantilla de inicio de sesión con el formulario
     return render_template('login.html', form=form)
