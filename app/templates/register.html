@@ -2,16 +2,20 @@
 {% block title %}Registro{% endblock %}
 
 {% block content %}
+<div class="register-wrapper">
     <div class="register-container">
-        <h2 class="text-center mb-4">Registro</h2>
-        <form method="POST" class="form-container">
+        <div class="register-header">
+            <h2 class="text-center">Crear Cuenta</h2>          
+        </div>
+        
+        <form method="POST" class="register-form">
             {{ form.hidden_tag() }}
 
-            <div class="form-group">
-                {{ form.username.label }}
-                {{ form.username(class="form-control", placeholder="Ingresa tu nombre de usuario") }}
+            <div class="form-group mb-3">
+                <label class="form-label">Nombre de Usuario</label>
+                {{ form.username(class="form-control form-control-lg", placeholder="") }}
                 {% if form.username.errors %}
-                    <div class="text-danger">
+                    <div class="invalid-feedback d-block">
                         {% for error in form.username.errors %}
                             <small>{{ error }}</small><br>
                         {% endfor %}
@@ -19,11 +23,11 @@
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.email.label }}
-                {{ form.email(class="form-control", placeholder="Ingresa tu correo electrónico") }}
+            <div class="form-group mb-3">
+                <label class="form-label">Correo Electrónico</label>
+                {{ form.email(class="form-control form-control-lg", placeholder="") }}
                 {% if form.email.errors %}
-                    <div class="text-danger">
+                    <div class="invalid-feedback d-block">
                         {% for error in form.email.errors %}
                             <small>{{ error }}</small><br>
                         {% endfor %}
@@ -31,11 +35,11 @@
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.password.label }}
-                {{ form.password(class="form-control", placeholder="Ingresa tu contraseña") }}
+            <div class="form-group mb-3">
+                <label class="form-label">Contraseña</label>
+                {{ form.password(class="form-control form-control-lg", placeholder="") }}
                 {% if form.password.errors %}
-                    <div class="text-danger">
+                    <div class="invalid-feedback d-block">
                         {% for error in form.password.errors %}
                             <small>{{ error }}</small><br>
                         {% endfor %}
@@ -43,11 +47,11 @@
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.confirm_password.label }}
-                {{ form.confirm_password(class="form-control", placeholder="Confirma tu contraseña") }}
+            <div class="form-group mb-4">
+                <label class="form-label">Confirmar Contraseña</label>
+                {{ form.confirm_password(class="form-control form-control-lg", placeholder="") }}
                 {% if form.confirm_password.errors %}
-                    <div class="text-danger">
+                    <div class="invalid-feedback d-block">
                         {% for error in form.confirm_password.errors %}
                             <small>{{ error }}</small><br>
                         {% endfor %}
@@ -55,15 +59,110 @@
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.submit(class="btn btn-primary w-100") }}
-            </div>
-            <div class="form-group mt-4 text-center">
-                <a href="{{ url_for('main.home') }}" class="btn btn-outline-light btn-sm rounded-pill px-4">
-                    <i class="bi bi-arrow-left"></i> Volver
-                </a>                
+            <div class="form-group mb-3">
+                {{ form.submit(class="btn btn-primary btn-lg w-100") }}
             </div>
             
+            <div class="text-center mt-4">
+                <a href="{{ url_for('main.home') }}" class="text-decoration-none">
+                    ← Regresar
+                </a>
+            </div>
         </form>
     </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #4a89dc;
+        --light-color: #f8f9fa;
+        --dark-color: #343a40;
+        --border-color: #dee2e6;
+    }
+    
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .register-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .register-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 500px;
+    }
+    
+    .register-header {
+        margin-bottom: 2rem;
+    }
+    
+    .register-header h2 {
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+    
+    .register-header p {
+        color: #6c757d;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--dark-color);
+    }
+    
+    .form-control {
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(74, 137, 220, 0.2);
+    }
+    
+    .form-control-lg {
+        font-size: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.75rem;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+    
+    .btn-primary:hover {
+        background-color: #3a70c2;
+    }
+    
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .register-container {
+            padding: 1.5rem;
+        }
+        
+        .register-header {
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
 {% endblock %}

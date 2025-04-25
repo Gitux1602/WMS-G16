@@ -81,7 +81,7 @@ class Inventario(db.Model):
         print(f"Estado actualizado a 'Cerrado'. FechaFin: {self.fechaFin}")  
         db.session.commit()  # Guarda los cambios en la base de datos
         print("Cambios guardados en la base de datos.")  
-
+"""
 #Prueba para ver como funcion event.listens_for
 @event.listens_for(Inventario, 'before_insert')
 @event.listens_for(Inventario, 'before_update')
@@ -93,7 +93,7 @@ def validate_comentarios_before_change(mapper, connection, target):
     
     # Mensaje de éxito (opcional)
     print(f"Comentarios validados correctamente para documento {target.docnum}")
-
+"""
 class InventarioDetalle(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
     docnum = db.Column(db.Integer, db.ForeignKey('inventario.docnum'), nullable=False)  
