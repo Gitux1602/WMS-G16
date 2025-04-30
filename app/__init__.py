@@ -28,12 +28,14 @@ def create_app():
     from app.routes.conteo_sap import inventario_bp
     from app.routes.inventarios import inv_estado
     from app.routes.articulo_codigo import item
-    
+    from app.routes.ver_articulos import ver_articulos
+
+
     app.register_blueprint(item)
     app.register_blueprint(auth)
     app.register_blueprint(main)
     app.register_blueprint(inventario_bp)
     app.register_blueprint(inv_estado)
-
+    app.register_blueprint(ver_articulos)
 
     return app
