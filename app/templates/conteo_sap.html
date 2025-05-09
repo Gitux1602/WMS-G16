@@ -36,6 +36,18 @@
             letter-spacing: 0.5px;
         }
 
+        .recently-scanned {
+            background-color: rgba(74, 137, 220, 0.1) !important;
+            border-left: 4px solid var(--primary-blue) !important;
+            transition: all 0.3s ease;
+        }
+
+        .scanned-order {
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+
         .btn-secondary {
             background-color: var(--light-blue);
             color: var(--dark-blue);
@@ -335,7 +347,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // [El resto del JavaScript permanece igual]
+
         window.onload = function () {
             const inputEscaneo = document.getElementById('codigo-barras');
             if (inputEscaneo && !inputEscaneo.disabled) {
@@ -353,7 +365,6 @@
                     actualizarCampoUbicacion(input, savedUbicacion);
                 });
             } else {
-                // Guardar por defecto la ubicación inicial
                 localStorage.setItem('ubicacionSeleccionada', selectUbicacion.value);
             }
         };
@@ -546,19 +557,76 @@
             document.getElementById('codigo-barras').value = '';
         }
 
+        // Variable para llevar el registro del orden de escaneo
+        let scannedItemsOrder = [];
+
         function actualizarGrid(itemcode, descripcion, sumatoriaCantidad, cantidadUbicacion, diferencias) {
             // Buscar la fila correspondiente en la tabla
             const fila = document.querySelector(`tr[data-itemcode="${itemcode}"]`);
+            const tbody = document.querySelector('tbody');
+
             if (fila) {
-                fila.querySelector('td:nth-child(1)').innerHTML = `<strong>${descripcion}</strong><br><small class="text-muted">${itemcode}</small>`;
+                // Actualizar el contenido de la fila SIN el span scanned-order
+                fila.querySelector('td:nth-child(1)').innerHTML = `
+            <strong>${descripcion}</strong>
+            <br>
+            <small class="text-muted">${itemcode}</small>
+        `;
+
+                // Resto del código permanece igual...
                 fila.querySelector('td:nth-child(2)').textContent = sumatoriaCantidad;
                 fila.querySelector('td:nth-child(3) input').value = cantidadUbicacion;
                 fila.querySelector('td:nth-child(4)').textContent = diferencias;
-                fila.querySelector('td:nth-child(4)').className = diferencias < 0 ? 'text-danger text-end' : 'text-success text-end';
+                fila.querySelector('td:nth-child(4)').className = diferencias < 0 ?
+                    'text-danger text-end fw-bold' : 'text-success text-end fw-bold';
+
+                // Resaltar la fila
+                fila.classList.add('recently-scanned');
+                setTimeout(() => {
+                    fila.classList.remove('recently-scanned');
+                }, 3000);
+
+                // Actualizar el orden de escaneo (sin mostrar números)
+                updateScannedOrder(itemcode, fila, tbody);
             } else {
                 console.error(`No se encontró la fila para el artículo con código: ${itemcode}`);
             }
         }
+
+        function updateScannedOrder(itemcode, fila, tbody) {
+            // Si el artículo ya estaba en la lista, lo removemos
+            scannedItemsOrder = scannedItemsOrder.filter(code => code !== itemcode);
+
+            // Agregamos el artículo al inicio de la lista
+            scannedItemsOrder.unshift(itemcode);
+
+            // Reordenar todas las filas según el orden de escaneo
+            const allRows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Ordenar las filas: primero las escaneadas recientemente, luego las demás
+            allRows.sort((a, b) => {
+                const aCode = a.getAttribute('data-itemcode');
+                const bCode = b.getAttribute('data-itemcode');
+
+                const aIndex = scannedItemsOrder.indexOf(aCode);
+                const bIndex = scannedItemsOrder.indexOf(bCode);
+
+                // Si ambos están en la lista de escaneados, ordenar por índice
+                if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+                // Si solo A está en la lista, A primero
+                if (aIndex !== -1) return -1;
+                // Si solo B está en la lista, B primero
+                if (bIndex !== -1) return 1;
+                // Si ninguno está en la lista, mantener orden original
+                return 0;
+            });
+
+            // Reinsertar las filas en el nuevo orden
+            allRows.forEach(row => tbody.appendChild(row));
+
+            
+        }
+
 
         // Escuchar eventos de entrada en el campo de texto
         document.getElementById('codigo-barras').addEventListener('input', function (event) {

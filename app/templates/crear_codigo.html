@@ -67,9 +67,19 @@
         .back-button {
             margin-top: 1rem;
         }
-        
+
         .units-text {
             min-width: 100px;
+        }
+
+        .select-dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1em;
         }
     </style>
 </head>
@@ -91,7 +101,8 @@
                     {{ form.codigo_barras.label(class="form-label") }}
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-qrcode"></i></span>
-                        {{ form.codigo_barras(class="form-control form-control-lg", placeholder="7518SA|120500006100563M0E|10") }}
+                        {{ form.codigo_barras(class="form-control form-control-lg",
+                        placeholder="7518SA|120500006100563M0E|10") }}
                     </div>
                     {% if form.codigo_barras.errors %}
                     <div class="text-danger mt-2">
@@ -123,7 +134,7 @@
                     {{ form.proveedor_id.label(class="form-label") }}
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-shipping-fast"></i></span>
-                        {{ form.proveedor_id(class="form-control form-control-lg", placeholder="P0001") }}
+                        {{ form.proveedor_id(class="form-control form-control-lg select-dropdown") }}
                     </div>
                     {% if form.proveedor_id.errors %}
                     <div class="text-danger mt-2">
@@ -170,4 +181,5 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

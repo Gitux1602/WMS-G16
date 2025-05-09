@@ -34,7 +34,7 @@ class Proveedor(db.Model):
 
     def __repr__(self):
         return f"Proveedor('{self.proveedor_id}', '{self.nombre}', '{self.contacto}')"
-
+ 
 class CodigoBarras(db.Model):
     codigo_barras = db.Column(db.String(100), primary_key=True)  #CatalagoIC del proveedor, para el PT019 CatalagoIC = ItemCode
     itemcode = db.Column(db.String(50), db.ForeignKey('articulo.itemcode'), nullable=False)  # Clave foránea a Artículos

@@ -14,7 +14,7 @@ def crear_conteo_inventario(basedatos):
 
         # Obtener los datos de SAP
         resultados = bajar_inventario_desde_sap(basedatos)
-        print(f"Resultados de SAP: {resultados}")
+        #print(f"Resultados de SAP: {resultados}")
 
         if not resultados:
             raise ValueError("No se recibieron datos de SAP.")
@@ -39,7 +39,7 @@ def crear_conteo_inventario(basedatos):
             # Verificar si el artículo existe en la tabla Articulo
             articulo = Articulo.query.filter_by(itemcode=itemcode).first()
             if not articulo:
-                print(f"Artículo {itemcode} no encontrado en la base de datos. Saltando...")
+                #print(f"Artículo {itemcode} no encontrado en la base de datos. Saltando...")
                 continue
 
             # Crear el detalle del inventario

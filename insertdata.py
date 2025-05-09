@@ -1,6 +1,6 @@
 import pandas as pd
 from app import create_app, db
-from app.models import CodigoBarras, Proveedor, Articulo,  CodigoBarras, User
+from app.models import CodigoBarras, Inventario, InventarioDetalle, Proveedor, Articulo,  CodigoBarras, Ubicaciones, User
 
 app = create_app()
 """
@@ -123,6 +123,25 @@ with app.app_context():
     else:
         print("Usuario no encontrado")
 """
+
+
+with app.app_context():
+    try:
+        # Primero eliminamos los registros de las tablas hijas
+        Ubicaciones.query.delete()
+        InventarioDetalle.query.delete()
+        
+        # Luego eliminamos los registros de la tabla principal
+        Inventario.query.delete()
+        
+        db.session.commit()
+        print("Todos los registros de inventario han sido eliminados exitosamente")
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"Ocurrió un error al eliminar los registros: {str(e)}")
+
+"""
 with app.app_context():
     userD = User.query.get(3)
     if userD:
@@ -131,3 +150,4 @@ with app.app_context():
         print("Usuario eliminado")
     else:
         print("Usuario  no encontrado")
+"""

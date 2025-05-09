@@ -68,7 +68,7 @@ def subir_excel():
                 # Verificar si el artículo existe en la tabla Articulo
                 articulo = Articulo.query.filter_by(itemcode=itemcode).first()
                 if not articulo:
-                    print(f"Artículo {itemcode} no encontrado en la base de datos. Saltando...")
+                    #print(f"Artículo {itemcode} no encontrado en la base de datos. Saltando...")
                     continue
 
                 # Crear el detalle del inventario

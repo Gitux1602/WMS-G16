@@ -19,7 +19,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Ese correo electrónico ya está registrado. Inicia sesión o usa otro.')
-
+ 
 class LoginForm(FlaskForm):
     email = StringField('Correo Electrónico', validators=[DataRequired(), Email()])
     password = PasswordField('Contraseña', validators=[DataRequired()])
@@ -32,9 +32,11 @@ class CreateItemForm(FlaskForm):
     frngname = StringField('Nombre Extranjero', validators=[DataRequired()])
     submit = SubmitField('Crear Articulo')
 
+from wtforms import SelectField
+
 class CreateQrForm(FlaskForm):
     codigo_barras = StringField('Código', validators=[DataRequired()])
-    itemcode =  StringField('Artículo', validators=[DataRequired()])
-    proveedor_id =  StringField('Código de Proveedor', validators=[DataRequired()])
-    pqt = IntegerField('Piezas por paquete', validators=[DataRequired(), NumberRange(min=1, message = 'El valor debe ser entero positivo')])
+    itemcode = StringField('Artículo', validators=[DataRequired()])
+    proveedor_id = SelectField('Proveedor', choices=[('P0001', 'P0001'), ('P0008', 'P0008')],validators=[DataRequired()])
+    pqt = IntegerField('Piezas por paquete', validators=[DataRequired(), NumberRange(min=1, message='El valor debe ser entero positivo')])
     submit = SubmitField('Crear Código')

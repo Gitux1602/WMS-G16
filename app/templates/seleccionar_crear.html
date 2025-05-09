@@ -11,6 +11,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Estilos personalizados -->
     <style>
+        /* Animación para los mensajes flash */
+        .alert {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .selection-container {
             max-width: 800px;
             margin: 3rem auto;
@@ -47,8 +64,10 @@
 
         /* Estilos para los botones con tamaño fijo */
         .btn-option {
-            width: 300px; /* Ancho fijo */
-            height: 80px; /* Alto fijo */
+            width: 300px;
+            /* Ancho fijo */
+            height: 80px;
+            /* Alto fijo */
             padding: 1.5rem;
             border-radius: 10px;
             font-size: 1.1rem;
@@ -87,10 +106,12 @@
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn-option {
-                width: 100%; /* Ocupa todo el ancho en móviles */
-                max-width: 300px; /* Pero no más de 300px */
+                width: 100%;
+                /* Ocupa todo el ancho en móviles */
+                max-width: 300px;
+                /* Pero no más de 300px */
             }
         }
     </style>
@@ -98,26 +119,40 @@
 
 <body class="bg-light">
     <div class="container py-4">
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {% if category == 'success' %}
+            <i class="fas fa-check-circle me-2"></i>
+            {% else %}
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {% endif %}
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="selection-container">
             <div class="selection-header">
                 <h1 class="selection-title">Sistema de Almacén - G16</h1>
                 <p class="selection-subtitle">Seleccione el tipo de registro que desea crear</p>
 
                 <div class="buttons-container">
-                    <a href="{{ url_for('articulo.crear_articulo') }}"
-                        class="btn btn-option btn-article">
+                    <a href="{{ url_for('articulo.crear_articulo') }}" class="btn btn-option btn-article">
                         <i class="fas fa-box me-2"></i> Crear Artículo
                     </a>
-                    <a href="{{ url_for('articulo.crear_codigo') }}"
-                        class="btn btn-option btn-qr">
+                    <a href="{{ url_for('articulo.crear_codigo') }}" class="btn btn-option btn-qr">
                         <i class="fas fa-qrcode me-2"></i> Crear Código
                     </a>
                 </div>
-                
+
                 <!-- Botón de regresar centrado -->
                 <div class="text-center mt-4">
                     <a href="{{ url_for('main.home') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i> Regresar
+                        <i class="fas fa-arrow-left me-2"></i> Volver
                     </a>
                 </div>
             </div>
@@ -126,5 +161,21 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para auto-ocultar mensajes flash -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.add('fade');
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
+
 </html>
