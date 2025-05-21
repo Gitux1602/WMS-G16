@@ -1,10 +1,11 @@
 from io import BytesIO
-from flask import Blueprint, flash, redirect, render_template, send_file, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, send_file, url_for
 from flask_login import login_required
 import pandas as pd
 from sqlalchemy import func
 from app.models import Inventario, InventarioDetalle
 from app import db
+from utils import servicelayer
 
 inv_estado = Blueprint('inventarios_estado', __name__)
 
@@ -111,3 +112,29 @@ def exportar_excel(docnum, estado):
             return redirect(url_for('inventarios_estado.inventarios_abiertos'))
         else:
             return redirect(url_for('inventarios_estado.inventarios_cerrados'))
+        
+@inv_estado.route('/crear_recuento_sap', methods=['POST'])
+@login_required
+def crear_recuento_sap_endpoint():
+    try:
+        data = request.get_json()
+        docnum = data.get('docnum')
+        almacen = data.get('almacen')
+        basedatos = data.get('basedatos')
+        
+        if not docnum:
+            return jsonify({'success': False, 'message': 'Falta el número de documento'}), 400
+        
+        # Llamar a la función del servicio
+        resultado = servicelayer.crear_recuento_sap(docnum)
+        
+        if resultado['success']:
+            return jsonify(resultado), 200
+        else:
+            return jsonify(resultado), 400
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error en el servidor: {str(e)}'
+        }), 500

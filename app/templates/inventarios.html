@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,9 @@
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         :root {
@@ -21,27 +24,46 @@
             --success-color: #2ecc71;
             --danger-color: #e74c3c;
         }
-        
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .ms-2 {
+            margin-left: 0.5rem !important;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa;
             color: #333;
         }
-        
+
         .custom-header {
             background: linear-gradient(135deg, var(--secondary-color), var(--dark-color));
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 100;
         }
-        
+
         h1 {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
             letter-spacing: 0.5px;
         }
-        
+
         .btn-volver {
             background-color: var(--light-color);
             color: var(--dark-color);
@@ -51,29 +73,29 @@
             border-radius: 50px;
             padding: 8px 20px;
         }
-        
+
         .btn-volver:hover {
             background-color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .card {
             border: none;
             border-radius: 12px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .table {
             margin-bottom: 0;
         }
-        
+
         .table thead th {
             background-color: var(--secondary-color);
             color: white;
@@ -83,38 +105,38 @@
             letter-spacing: 0.5px;
             border-bottom: none;
         }
-        
+
         .table-hover tbody tr:hover {
             background-color: rgba(52, 152, 219, 0.1);
             transform: scale(1.01);
             transition: all 0.2s ease;
         }
-        
+
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: rgba(236, 240, 241, 0.5);
         }
-        
+
         .btn-link {
             font-weight: 500;
             color: var(--primary-color);
             transition: all 0.2s ease;
         }
-        
+
         .btn-link:hover {
             color: var(--accent-color);
             text-decoration: none;
             transform: translateX(3px);
         }
-        
+
         .hover-effect {
             transition: all 0.2s ease;
             position: relative;
         }
-        
+
         .hover-effect:hover {
             color: var(--accent-color) !important;
         }
-        
+
         .hover-effect:after {
             content: '';
             position: absolute;
@@ -126,11 +148,11 @@
             transform: scaleX(0);
             transition: transform 0.2s ease;
         }
-        
+
         .hover-effect:hover:after {
             transform: scaleX(1);
         }
-        
+
         .btn-success {
             background-color: var(--success-color);
             border: none;
@@ -139,25 +161,25 @@
             font-size: 0.85rem;
             transition: all 0.3s ease;
         }
-        
+
         .btn-success:hover {
             background-color: #27ae60;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
         }
-        
+
         .empty-state {
             padding: 40px 0;
             text-align: center;
             color: #7f8c8d;
         }
-        
+
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 1rem;
             color: #bdc3c7;
         }
-        
+
         .status-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -167,27 +189,38 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         /* Cambios solicitados: colores de estado */
         .status-abierto {
-            background-color: rgba(46, 204, 113, 0.2); /* Verde claro */
-            color: var(--success-color); /* Verde */
+            background-color: rgba(46, 204, 113, 0.2);
+            /* Verde claro */
+            color: var(--success-color);
+            /* Verde */
         }
-        
+
         .status-cerrado {
-            background-color: rgba(231, 76, 60, 0.2); /* Rojo claro */
-            color: var(--danger-color); /* Rojo */
+            background-color: rgba(231, 76, 60, 0.2);
+            /* Rojo claro */
+            color: var(--danger-color);
+            /* Rojo */
         }
-        
+
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .custom-header {
@@ -195,18 +228,19 @@
                 text-align: center;
                 padding: 15px;
             }
-            
+
             .btn-volver {
                 margin-top: 10px;
                 width: 100%;
             }
-            
+
             .table-responsive {
                 border: none;
             }
         }
     </style>
 </head>
+
 <body class="bg-light">
     <!-- Cabecera -->
     <header class="d-flex align-items-center justify-content-between px-4 py-3 custom-header">
@@ -233,59 +267,65 @@
                                 <th id="th-estado"><i class="fas fa-info-circle me-2"></i>Estado</th>
                                 <th id="th-fechaInicio"><i class="fas fa-calendar-day me-2"></i>Inicio</th>
                                 {% if titulo != "Inventarios Abiertos" %}
-                                    <th id="th-fechaFin"><i class="fas fa-calendar-check me-2"></i>Fin</th>
+                                <th id="th-fechaFin"><i class="fas fa-calendar-check me-2"></i>Fin</th>
                                 {% endif %}
                                 <th id="th-basedatos"><i class="fas fa-database me-2"></i>Base</th>
                                 {% if titulo != "Inventarios Abiertos" %}
-                                    <th id="th-acciones"><i class="fas fa-file-export me-2"></i>Acciones</th>
+                                <th id="th-acciones"><i class="fas fa-file-export me-2"></i>Acciones</th>
                                 {% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             {% if inventarios %}
-                                {% for inventario in inventarios %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ url_for('inventario.mostrar_conteo_sap', docnum=inventario.docnum) }}" 
-                                           class="btn btn-link text-decoration-none hover-effect">
-                                            <!-- Cambio solicitado: icono del documento -->
-                                            <i class="fas fa-hashtag me-2"></i>{{ inventario.docnum }}
-                                        </a>
-                                    </td>
-                                    <td>{{ inventario.almacen }}</td>
-                                    <td>
-                                        <span class="status-badge {% if inventario.estado == 'Abierto' %}status-abierto{% else %}status-cerrado{% endif %}">
-                                            {{ inventario.estado }}
-                                        </span>
-                                    </td>
-                                    <td>{{ inventario.fechaInicio if inventario.fechaInicio else 'N/A' }}</td>
-                                    {% if titulo != "Inventarios Abiertos" %}
-                                        <td>{{ inventario.fechaFin if inventario.fechaFin else 'N/A' }}</td>
+                            {% for inventario in inventarios %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('inventario.mostrar_conteo_sap', docnum=inventario.docnum) }}"
+                                        class="btn btn-link text-decoration-none hover-effect">
+                                        <!-- Cambio solicitado: icono del documento -->
+                                        <i class="fas fa-hashtag me-2"></i>{{ inventario.docnum }}
+                                    </a>
+                                </td>
+                                <td>{{ inventario.almacen }}</td>
+                                <td>
+                                    <span
+                                        class="status-badge {% if inventario.estado == 'Abierto' %}status-abierto{% else %}status-cerrado{% endif %}">
+                                        {{ inventario.estado }}
+                                    </span>
+                                </td>
+                                <td>{{ inventario.fechaInicio if inventario.fechaInicio else 'N/A' }}</td>
+                                {% if titulo != "Inventarios Abiertos" %}
+                                <td>{{ inventario.fechaFin if inventario.fechaFin else 'N/A' }}</td>
+                                {% endif %}
+                                <td>{{ inventario.basedatos }}</td>
+                                {% if titulo != "Inventarios Abiertos" %}
+                                <td>
+                                    {% if inventario.estado == 'Cerrado' %}
+                                    <button class="btn btn-success btn-sm exportar-excel"
+                                        data-docnum="{{ inventario.docnum }}" data-estado="{{ inventario.estado}}">
+                                        <i class="fas fa-file-excel me-1"></i>Exportar
+                                    </button>
+                                    <!-- Agregar este botón para crear recuento -->
+                                    <button class="btn btn-primary btn-sm crear-recuento ms-2"
+                                        data-docnum="{{ inventario.docnum }}" data-almacen="{{ inventario.almacen }}"
+                                        data-basedatos="{{ inventario.basedatos }}">
+                                        <i class="fas fa-plus-circle me-1"></i>Crear Recuento
+                                    </button>
                                     {% endif %}
-                                    <td>{{ inventario.basedatos }}</td>
-                                    {% if titulo != "Inventarios Abiertos" %}
-                                        <td>
-                                            {% if inventario.estado == 'Cerrado' %}
-                                                <button class="btn btn-success btn-sm exportar-excel" 
-                                                        data-docnum="{{ inventario.docnum }}" 
-                                                        data-estado="{{ inventario.estado }}">
-                                                    <i class="fas fa-file-excel me-1"></i>Exportar
-                                                </button>
-                                            {% endif %}
-                                        </td>
-                                    {% endif %}
-                                </tr>
-                                {% endfor %}
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
                             {% else %}
-                                <tr>
-                                    <td colspan="7">
-                                        <div class="empty-state">
-                                            <i class="fas fa-inbox"></i>
-                                            <h4>No hay inventarios disponibles</h4>
-                                            <p>No se encontraron registros para mostrar</p>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <h4>No hay inventarios disponibles</h4>
+                                        <p>No se encontraron registros para mostrar</p>
+                                    </div>
+                                </td>
+                            </tr>
                             {% endif %}
                         </tbody>
                     </table>
@@ -309,7 +349,7 @@
                 boton.addEventListener('click', function () {
                     const docnum = this.getAttribute('data-docnum');
                     const estado = this.getAttribute('data-estado');
-                    
+
                     // Mostrar loader
                     const Toast = Swal.mixin({
                         toast: true,
@@ -322,7 +362,7 @@
                             toast.addEventListener('mouseleave', Swal.resumeTimer)
                         }
                     })
-                    
+
                     Toast.fire({
                         icon: 'info',
                         title: 'Generando archivo Excel...'
@@ -347,7 +387,7 @@
                             a.click();
                             document.body.removeChild(a);
                             window.URL.revokeObjectURL(url);
-                            
+
                             // Mostrar notificación de éxito
                             Toast.fire({
                                 icon: 'success',
@@ -365,21 +405,96 @@
                         });
                 });
             });
-            
+
             // Efecto hover en filas
             const rows = document.querySelectorAll('tbody tr');
             rows.forEach(row => {
-                row.addEventListener('mouseenter', function() {
+                row.addEventListener('mouseenter', function () {
                     this.style.transform = 'scale(1.01)';
                     this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                 });
-                
-                row.addEventListener('mouseleave', function() {
+
+                row.addEventListener('mouseleave', function () {
                     this.style.transform = '';
                     this.style.boxShadow = '';
                 });
             });
+
+            // Seleccionar todos los botones de "Crear Recuento"
+            const botonesCrearRecuento = document.querySelectorAll('.crear-recuento');
+
+            botonesCrearRecuento.forEach(boton => {
+                boton.addEventListener('click', function () {
+                    const docnum = this.getAttribute('data-docnum');
+                    const almacen = this.getAttribute('data-almacen');
+                    const basedatos = this.getAttribute('data-basedatos');
+
+                    Swal.fire({
+                        title: 'Confirmar creación de recuento',
+                        text: `¿Desea crear un nuevo recuento basado en el inventario ${docnum} del almacén ${almacen}?`,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, crear',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Mostrar loader
+                            Swal.fire({
+                                title: 'Creando recuento...',
+                                html: 'Por favor espere mientras se procesa la solicitud.',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                }
+                            });
+
+                            // Hacer la llamada a tu endpoint de Flask
+                            fetch(`/crear_recuento_sap`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    docnum: docnum,
+                                    almacen: almacen,
+                                    basedatos: basedatos
+                                })
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Recuento creado',
+                                            text: data.message || 'El recuento se ha creado correctamente en SAP.',
+                                            confirmButtonText: 'Aceptar'
+                                        }).then(() => {
+                                            // Recargar la página o actualizar la tabla si es necesario
+                                            location.reload();
+                                        });
+                                    } else {
+                                        throw new Error(data.message || 'Error al crear el recuento');
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: error.message,
+                                        confirmButtonColor: '#e74c3c'
+                                    });
+                                });
+                        }
+                    });
+                });
+            });
+
+
+
         });
     </script>
 </body>
+
 </html>
