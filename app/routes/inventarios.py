@@ -119,20 +119,18 @@ def crear_recuento_sap_endpoint():
     try:
         data = request.get_json()
         docnum = data.get('docnum')
-        almacen = data.get('almacen')
-        basedatos = data.get('basedatos')
-        
+
         if not docnum:
             return jsonify({'success': False, 'message': 'Falta el número de documento'}), 400
-        
+
         # Llamar a la función del servicio
         resultado = servicelayer.crear_recuento_sap(docnum)
-        
+
         if resultado['success']:
             return jsonify(resultado), 200
         else:
             return jsonify(resultado), 400
-            
+
     except Exception as e:
         return jsonify({
             'success': False,

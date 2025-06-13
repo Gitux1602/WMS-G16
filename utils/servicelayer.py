@@ -3,13 +3,19 @@ import json
 from datetime import datetime
 from app.models import Inventario, InventarioDetalle  
 
-def conectar():
+BASE_DATOS_MAP = {
+    "DISTRIBUIDORA": {"db": "SBO_TIENDA", "branch_id": 11, "usa_bin": False},
+    "FRONTERA": {"db": "SBO_TDAFRONTERA", "branch_id": 9, "usa_bin": True, "bin_entry": 1},
+    "IDR": {"db": "IDR", "branch_id": 25, "usa_bin": False}
+}
+
+def conectar(basedatos):
     url = "https://hanasrv:50000/b1s/v1/Login"
     
     payload = {
-        "CompanyDB": "TIENDA",
-        "Password": "fernando",
-        "UserName": "manager"
+        "CompanyDB": basedatos,
+        "UserName": "manager",
+        "Password": "fernando"
     }
 
     headers = {
@@ -22,17 +28,11 @@ def conectar():
     api_response = response.json()
     sesion_id = api_response.get("SessionId")
 
-    print(f"Conexión Exitosa {sesion_id}")
+    print(f"Conexión Exitosa a {basedatos} - SessionId: {sesion_id}")
     return sesion_id
 
 def crear_recuento_sap(docnum):
-    """
-    Crea un recuento en SAP basado en un inventario existente
-    :param docnum: Número de documento del inventario
-    :return: Diccionario con éxito/mensaje o error
-    """
     try:
-        # 1. Obtener datos del inventario desde la base de datos
         inventario = Inventario.query.get(docnum)
         if not inventario:
             return {'success': False, 'message': 'Inventario no encontrado'}
@@ -40,63 +40,69 @@ def crear_recuento_sap(docnum):
         if inventario.estado != 'Cerrado':
             return {'success': False, 'message': 'Solo se pueden crear recuentos de inventarios cerrados'}
         
-        # 2. Obtener los detalles del inventario
         detalles = InventarioDetalle.query.filter_by(docnum=docnum).all()
         if not detalles:
             return {'success': False, 'message': 'No hay artículos en este inventario'}
-        
-        # 3. Preparar los datos para SAP
+
+        # Obtener configuración de la base de datos según el nombre
+        nombre_empresa = inventario.basedatos.name.upper()
+        config = BASE_DATOS_MAP.get(nombre_empresa)
+
+        if not config:
+            return {'success': False, 'message': f'No hay configuración para la empresa: {nombre_empresa}'}
+
+        # Construir las líneas del recuento
         inventory_lines = []
         for detalle in detalles:
             line = {
                 "ItemCode": detalle.itemcode,
-                "WarehouseCode": inventario.almacen,  # Siempre "T019"
+                "WarehouseCode": inventario.almacen,
                 "Freeze": "tYES",
-                "BinEntry": 9,  
                 "CountedQuantity": detalle.cantidad_contada
             }
+            if config.get("usa_bin"):
+                line["BinEntry"] = config["bin_entry"]
             inventory_lines.append(line)
-        
+
         payload = {
-            "BranchID": 11, 
+            "BranchID": config["branch_id"],
             "InventoryCountingLines": inventory_lines,
             "Remarks": f"Conteo automático generado a partir del inventario {docnum}"
         }
-        
-        print("Datos a enviar a SAP:")
-        print(json.dumps(payload, indent=4))
-        
-        # 4. Conectar a SAP y enviar el recuento
-        session_id = conectar()
+
+        #print("Payload a enviar a SAP:")
+        #print(json.dumps(payload, indent=4))
+
+        # Conectarse y enviar a SAP
+        session_id = conectar(config["db"])
         url = "https://hanasrv:50000/b1s/v1/InventoryCountings"
-        
+
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
             "Cookie": f"B1SESSION={session_id}"
         }
-        
+
         response = requests.post(url, headers=headers, data=json.dumps(payload), verify=False)
         response.raise_for_status()
-        
-        # 5. Procesar la respuesta
+
         sap_response = response.json()
         print("Respuesta de SAP:", sap_response)
-        
+
         return {
             'success': True,
-            'message': f"Recuento creado exitosamente en SAP (DocNum: {sap_response.get('DocNum')})",
+            'message': f"Recuento creado exitosamente en SAP (DocNum: {sap_response.get('DocumentNumber')})",
             'docnum': sap_response.get('DocNum')
         }
-        
+
     except requests.exceptions.RequestException as e:
         error_msg = f"Error al conectar con SAP: {str(e)}"
         if hasattr(e, 'response') and e.response:
             try:
                 error_detail = e.response.json()
-                error_msg = f"{error_msg}. Detalles: {error_detail.get('error', {}).get('message', 'Sin detalles')}"
+                error_msg += f". Detalles: {error_detail.get('error', {}).get('message', 'Sin detalles')}"
             except:
-                error_msg = f"{error_msg}. Respuesta: {e.response.text}"
+                error_msg += f". Respuesta: {e.response.text}"
         return {'success': False, 'message': error_msg}
     
     except Exception as e:
