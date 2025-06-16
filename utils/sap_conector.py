@@ -17,7 +17,9 @@ class Config:
         "Distribuidora": "SBO_TIENDA",
         "Frontera": "SBO_TDAFRONTERA",
         "IDR": "IDR",
-        "Acabados": "SBO_PINTADORA"
+        "Acabados": "SBO_PINTADORA",
+        "SBO_TIENDA": "SBO_TIENDA",
+        "SBO_TDAFRONTERA": "SBO_TDAFRONTERA"        
     }
 
 def conectar_a_sap(basedatos):
@@ -37,8 +39,32 @@ def conectar_a_sap(basedatos):
     except Exception as e:
         raise Exception(f"Error al conectar a SAP HANA: {e}")
 
-def bajar_inventario_desde_sap(basedatos):
+def bajar_inventario_desde_sap(bd):
     try:
+
+        conn, cursor, schema = conectar_a_sap(bd)
+
+        query = f"""
+        SELECT T0."ItemCode", T1."OnHand", T1."WhsCode", T2."ItmsGrpNam"
+        FROM "{schema}".OITM T0
+        INNER JOIN "{schema}".OITW T1 ON T0."ItemCode" = T1."ItemCode"
+        INNER JOIN "{schema}".OITB T2 ON T0."ItmsGrpCod" = T2."ItmsGrpCod"
+        WHERE T1."WhsCode" = 'T019'
+        AND T2."ItmsGrpNam" IN ('ALUMINIO', 'EUROALUM', 'UNATRESOCTAVOS')
+        """
+
+        cursor.execute(query)
+        resultados = cursor.fetchall()
+        cursor.close()
+        conn.close() 
+
+        return resultados
+    except Exception as e:
+        raise Exception(f"Error al bajar el inventario desde SAP: {e}")
+    
+def inventario_sap_subir_recuento(basedatos):
+    try:
+        print(f"DEBUG - Valor de basedatos recibido: {basedatos}")
         conn, cursor, schema = conectar_a_sap(basedatos)
 
         query = f"""
@@ -48,7 +74,6 @@ def bajar_inventario_desde_sap(basedatos):
         INNER JOIN "{schema}".OITB T2 ON T0."ItmsGrpCod" = T2."ItmsGrpCod"
         WHERE T1."WhsCode" = 'T019'
         AND T2."ItmsGrpNam" IN ('ALUMINIO', 'EUROALUM', 'UNATRESOCTAVOS')
-        AND T0."ItemCode" IN ('7333SA','7518SA')
         """
 
         cursor.execute(query)
