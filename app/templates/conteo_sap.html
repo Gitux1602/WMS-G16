@@ -628,11 +628,26 @@
         }
 
 
-        // Escuchar eventos de entrada en el campo de texto
-        document.getElementById('codigo-barras').addEventListener('input', function (event) {
-            const codigo = event.target.value.trim().replace(/[\r\n]/g, '');
-            escanearCodigo(codigo);
-        });
+    let bufferQR = '';
+    let debounceTimer;
+
+    document.getElementById('codigo-barras').addEventListener('input', function (event) {
+        const input = event.target;
+        const nuevoChar = input.value;
+        bufferQR += nuevoChar;
+
+        input.value = '';
+
+        // Reiniciar el temporizador
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            const codigoFinal = bufferQR.trim().replace(/[\r\n]/g, '');
+            if (codigoFinal.length > 0) {
+                escanearCodigo(codigoFinal);
+            }
+            bufferQR = ''; // Limpiar el buffer después de procesar
+        }, 75); // Tiempo de espera
+    });
     </script>
 </body>
 
