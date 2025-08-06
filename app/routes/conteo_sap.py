@@ -294,8 +294,7 @@ def actualizar_comentarios(docnum):
         flash("Documento no encontrado.", "warning")
 
     return redirect(url_for('inventario.mostrar_conteo_sap', docnum=docnum))
-
-
+"""
 @inventario_bp.route('/procesar_codigo_qr', methods=['POST'])
 @login_required
 def procesar_codigo_qr():
@@ -371,6 +370,99 @@ def procesar_codigo_qr():
             "cantidad_ubicacion": cantidad_ubicacion,  
             "diferencias": detalle.diferencias
         })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": f"Error al procesar el código QR: {str(e)}"}), 500
+"""
+
+@inventario_bp.route('/procesar_codigo_qr', methods=['POST'])
+@login_required
+def procesar_codigo_qr():
+    data = request.get_json()
+    codigo_qr = data.get('codigo_qr')
+    ubicacion = data.get('ubicacion')
+
+    if not codigo_qr or not ubicacion:
+        return jsonify({"success": False, "message": "Código QR o ubicación no proporcionados"}), 400
+
+    try:
+        # Parsear el código QR en formato ArticuloSA|BaseDatos|Piezas
+        partes = codigo_qr.split('|')
+        if len(partes) != 3:
+            return jsonify({"success": False, "message": "Formato de QR inválido. Se espera ArticuloSA|BaseDatos|Piezas"}), 400
+
+        itemcode = partes[0]
+        basedatos_qr = partes[1]  # Base de datos del QR
+        pqt = float(partes[2])
+
+        # Validar que pqt sea un número positivo
+        if pqt <= 0:
+            return jsonify({"success": False, "message": "El número de piezas debe ser mayor que cero"}), 400
+
+        # Obtener el documento de inventario actual
+        docnum = data.get('docnum')
+        inventario = Inventario.query.get_or_404(docnum)
+        
+        # Validar que la base de datos del QR coincida con la del inventario
+        if inventario.basedatos.value != basedatos_qr:
+            return jsonify({
+                "success": False,
+                "message": f"El material escaneado pertenece a la base de datos {basedatos_qr} "
+                           f"pero el inventario es para {inventario.basedatos.value}. "
+                           "No se puede mezclar material de diferentes bases de datos."
+            }), 400
+
+        # Buscar el detalle del inventario para este artículo
+        detalle = InventarioDetalle.query.filter_by(docnum=docnum, itemcode=itemcode).first()
+        if not detalle:
+            return jsonify({"success": False, "message": f"Artículo {itemcode} no encontrado en el inventario"}), 404
+
+        # Buscar o crear el registro en la tabla Ubicaciones
+        ubicacion_obj = Ubicaciones.query.filter_by(
+            docnum=docnum,
+            itemcode=itemcode,
+            ubicacion=ubicacion
+        ).first()
+
+        if not ubicacion_obj:
+            ubicacion_obj = Ubicaciones(
+                docnum=docnum,
+                itemcode=itemcode,
+                ubicacion=ubicacion,
+                cantidad_contada=pqt
+            )
+            db.session.add(ubicacion_obj)
+        else:
+            ubicacion_obj.cantidad_contada += pqt
+
+        # Guardar los cambios en la base de datos
+        db.session.commit()
+
+        # Recalcular la sumatoria de cantidades contadas
+        sumatoria_cantidad = db.session.query(db.func.sum(Ubicaciones.cantidad_contada)) \
+            .filter(Ubicaciones.docnum == docnum, Ubicaciones.itemcode == itemcode) \
+            .scalar() or 0.0
+
+        # Obtener la cantidad contada en la ubicación seleccionada
+        cantidad_ubicacion = ubicacion_obj.cantidad_contada
+
+        # Actualizar la cantidad contada en el detalle
+        detalle.cantidad_contada = sumatoria_cantidad
+        detalle.diferencias = sumatoria_cantidad - detalle.cantidad_almacen
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Código QR procesado correctamente",
+            "itemcode": itemcode,
+            "descripcion": detalle.articulo.descripcion,
+            "sumatoria_cantidad": sumatoria_cantidad,
+            "cantidad_ubicacion": cantidad_ubicacion,
+            "diferencias": detalle.diferencias
+        })
+    except ValueError:
+        return jsonify({"success": False, "message": "El número de piezas no es válido"}), 400
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": f"Error al procesar el código QR: {str(e)}"}), 500
