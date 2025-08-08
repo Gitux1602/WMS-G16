@@ -51,6 +51,7 @@ def bajar_inventario_desde_sap(bd):
         INNER JOIN "{schema}".OITB T2 ON T0."ItmsGrpCod" = T2."ItmsGrpCod"
         WHERE T1."WhsCode" = 'T019'
         AND T2."ItmsGrpNam" IN ('ALUMINIO', 'EUROALUM', 'UNATRESOCTAVOS')
+        AND T0."U_COLOR" IN ('SIN ACABADO', 'SINACABADO', 'sin acabado', 'sinacabado')
         """
 
         cursor.execute(query)
@@ -72,8 +73,9 @@ def inventario_sap_subir_recuento(basedatos):
         FROM "{schema}".OITM T0
         INNER JOIN "{schema}".OITW T1 ON T0."ItemCode" = T1."ItemCode"
         INNER JOIN "{schema}".OITB T2 ON T0."ItmsGrpCod" = T2."ItmsGrpCod"
-        WHERE T1."WhsCode" = 'T019'
+        WHERE T1."WhsCode" = 'T019' 
         AND T2."ItmsGrpNam" IN ('ALUMINIO', 'EUROALUM', 'UNATRESOCTAVOS')
+        AND T0."U_COLOR" IN ('SIN ACABADO', 'SINACABADO', 'sin acabado', 'sinacabado')
         """
 
         cursor.execute(query)

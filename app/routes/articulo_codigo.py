@@ -23,7 +23,6 @@ def crear_articulo():
         # Convertir a mayúsculas (excepto números, que se mantienen igual)
         itemcodeform = form.itemcode.data.upper() if isinstance(form.itemcode.data, str) else form.itemcode.data
         descripcion = form.descripcion.data.upper() if isinstance(form.descripcion.data, str) else form.descripcion.data
-        frngname = form.frngname.data.upper() if isinstance(form.frngname.data, str) else form.frngname.data
         
         articulo = Articulo.query.filter_by(itemcode=itemcodeform).first()
         
@@ -33,7 +32,7 @@ def crear_articulo():
             nuevo_articulo = Articulo(
                 itemcode=itemcodeform,
                 descripcion=descripcion,
-                frngname=frngname
+                frngname="Null"
             )
             db.session.add(nuevo_articulo)
             db.session.commit()

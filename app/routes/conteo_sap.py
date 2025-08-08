@@ -1,7 +1,8 @@
 from datetime import datetime
+import io
 import os
 import pandas as pd
-from flask import Blueprint, jsonify, redirect, render_template, request, url_for, flash
+from flask import Blueprint, jsonify, make_response, redirect, render_template, request, session, url_for, flash
 from flask_login import login_required
 from app.models import Articulo, BaseDatosEnum, CodigoBarras, Inventario, InventarioDetalle, Ubicaciones, UBICACIONES_PREDEFINIDAS
 from services.inventario_services import crear_conteo_inventario
@@ -96,7 +97,6 @@ def subir_excel():
 
     return render_template('subir_excel.html', opciones_basedatos=opciones_basedatos)
 
-#función para crear conteo de inventario mediante el service de HANA SQL
 @inventario_bp.route('/crear_conteo', methods=['POST'])
 @login_required
 def crear_conteo():
@@ -106,15 +106,23 @@ def crear_conteo():
         return redirect(url_for('main.seleccionar_base_datos'))
 
     try:
-        # Crear el conteo de inventario desde SAP
-        nuevo_inventario = crear_conteo_inventario(basedatos)
+        nuevo_inventario, articulos_faltantes = crear_conteo_inventario(basedatos)
 
-        # Redirigir a la página de conteo_sap.html con el docnum del nuevo inventario
-        return redirect(url_for('inventario.mostrar_conteo_sap', docnum=nuevo_inventario.docnum))
+        if nuevo_inventario:
+            # Flujo de éxito: el inventario se creó correctamente
+            flash(f"Conteo de inventario para el documento {nuevo_inventario.docnum} creado con éxito.", "success")
+            return redirect(url_for('inventario.mostrar_conteo_sap', docnum=nuevo_inventario.docnum))
+        else:
+            # Flujo de error: el inventario NO se creó
+            flash("No se pudo crear el conteo de inventario debido a artículos faltantes.", "danger")
+            return render_template(
+                'articulos_faltantes.html',
+                articulos=articulos_faltantes
+            )
+            
     except Exception as e:
         flash(f"Error al crear el conteo de inventario: {e}", 'danger')
         return redirect(url_for('main.seleccionar_base_datos'))
-
 
 @inventario_bp.route('/conteo_sap/<int:docnum>')
 @login_required

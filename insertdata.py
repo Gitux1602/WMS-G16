@@ -3,28 +3,42 @@ from app import create_app, db
 from app.models import CodigoBarras, Inventario, InventarioDetalle, Proveedor, Articulo,  CodigoBarras, Ubicaciones, User
 
 app = create_app()
-"""
+
 #Crea articulos nuevos desde el excel llamado articulosnuevos y sus columnas son ItemCode, Description, FrgnName
 with app.app_context():
-
     df = pd.read_excel('articulosnuevos.xlsx')
-
 
     print("Datos leídos del Excel:")
     print(df.head())
 
-    
+    total_creados = 0
+    total_actualizados = 0
+
     for index, row in df.iterrows():
-        nuevo_articulo = Articulo(
-            itemcode=row['ItemCode'],
-            descripcion=row['Description'],
-            frngname=row['FrgnName']
-        )
-        db.session.add(nuevo_articulo)
+        # Verificar si el artículo ya existe
+        articulo_existente = db.session.query(Articulo).filter_by(itemcode=row['ItemCode']).first()
+        
+        if articulo_existente:
+            # Actualizar el registro existente
+            articulo_existente.descripcion = row['Description']
+            articulo_existente.frngname = row['FrgnName']
+            total_actualizados += 1
+        else:
+            # Crear nuevo registro
+            nuevo_articulo = Articulo(
+                itemcode=row['ItemCode'],
+                descripcion=row['Description'],
+                frngname=row['FrgnName']
+            )
+            db.session.add(nuevo_articulo)
+            total_creados += 1
 
     db.session.commit()
-    print(f"\nSe han insertado {len(df)} artículos exitosamente.")
-"""
+    print(f"\nResumen de la operación:")
+    print(f"- Artículos creados: {total_creados}")
+    print(f"- Artículos actualizados: {total_actualizados}")
+    print(f"- Total procesados: {len(df)}")
+
 """
 #Crea QR's nuevos desde el excel llamado qrsnuevos y sus columnas son ItemCode, Supplier, Qr, Qty
 with app.app_context():
@@ -124,7 +138,7 @@ with app.app_context():
         print("Usuario no encontrado")
 """
 
-
+"""
 with app.app_context():
     try:
         # Primero eliminamos los registros de las tablas hijas
@@ -140,7 +154,7 @@ with app.app_context():
     except Exception as e:
         db.session.rollback()
         print(f"Ocurrió un error al eliminar los registros: {str(e)}")
-
+"""
 """
 with app.app_context():
     userD = User.query.get(3)

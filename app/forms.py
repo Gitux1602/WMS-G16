@@ -29,7 +29,6 @@ class LoginForm(FlaskForm):
 class CreateItemForm(FlaskForm):
     itemcode  = StringField('Artículo', validators=[DataRequired()])
     descripcion = StringField('Descripción', validators=[DataRequired()])
-    frngname = StringField('Nombre Extranjero', validators=[DataRequired()])
     submit = SubmitField('Crear Articulo')
 
 from wtforms import SelectField
